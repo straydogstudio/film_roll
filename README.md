@@ -6,7 +6,7 @@
 
 **film_roll** is a lightweight jQuery carousel that focuses on one item at a time, centering it in the view, regardless of the relative sizes of the carousel items.
 
-[**SEE DEMO**](http://film_roll.github.io/)
+[**SEE DEMO**](http://straydogstudio.github.io/film_roll)
 
 ---
 
@@ -62,7 +62,7 @@ Options:
 - **:no_css**: Do not add [default css](#default-css) to page.
 
 ###Examples
-View the [project page for working examples](https://film_roll.github.com).
+View the [project page for working examples](https://straydogstudio.github.com/film_roll).
 
 A basic example:
 
