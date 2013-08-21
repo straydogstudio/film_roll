@@ -27,6 +27,7 @@
       this.moveLeft = __bind(this.moveLeft, this);
       this.clearTimer = __bind(this.clearTimer, this);
       this.configureTimer = __bind(this.configureTimer, this);
+      this.configureWidths = __bind(this.configureWidths, this);
       if (this.options === null) {
         this.options = {};
       }
@@ -65,24 +66,15 @@
         });
       }
       this.pager_links = this.div.find('.film_roll_pager a');
-      this.width = this.height = 0;
       this.children.each(function(i, e) {
-        var $el, el_height, _width;
+        var $el;
         _this.rotation.push(e);
         $el = jQuery(e);
         $el.attr('style', 'position:relative; display:inline-block; vertical-align:middle');
-        _width = $el.width();
-        _this.width += _width;
-        el_height = $el.outerHeight(true);
-        if (el_height > _this.height) {
-          _this.height = el_height;
-        }
         return $el.addClass('film_roll_child');
       });
-      this.shuttle.width(this.width * 2);
-      if (this.options.height) {
-        this.height = parseInt(this.options.height, 10);
-      }
+      this.shuttle.width(10000);
+      this.height = this.options.height ? parseInt(this.options.height, 10) : 0;
       this.wrapper.height(this.height);
       this.shuttle.height(this.height);
       if (this.options.prev && this.options.next) {
@@ -97,19 +89,47 @@
       this.prev.click(this.moveRight);
       this.next.click(this.moveLeft);
       this.index = this.options.start_index || 0;
-      this.moveToIndex(this.index, 'right', false);
       this.interval = this.options.interval || 4000;
       this.animation = this.options.animation || this.interval / 4;
       if (this.options.scroll !== false) {
-        this.configureTimer();
         this.div.hover(this.clearTimer, this.configureTimer);
-        this.prev.hover(this.clearTimer, this.configureTimer);
-        this.next.hover(this.clearTimer, this.configureTimer);
+        if (this.options.prev && this.options.next) {
+          this.prev.hover(this.clearTimer, this.configureTimer);
+          this.next.hover(this.clearTimer, this.configureTimer);
+        }
       }
       jQuery(window).resize(function() {
         return _this.resize();
       });
+      jQuery(window).load(function() {
+        console.log('we are loaded');
+        _this.configureWidths();
+        _this.moveToIndex(_this.index, 'right', false);
+        return _this.configureTimer();
+      });
       return this;
+    };
+
+    FilmRoll.prototype.configureWidths = function() {
+      var max_el_height,
+        _this = this;
+      console.log('config widths!');
+      this.width = max_el_height = 0;
+      this.children.each(function(i, e) {
+        var $el, el_height;
+        $el = jQuery(e);
+        _this.width += $el.width();
+        el_height = $el.outerHeight(true);
+        if (el_height > max_el_height) {
+          return max_el_height = el_height;
+        }
+      });
+      if (!this.options.height) {
+        this.height = max_el_height;
+      }
+      this.shuttle.width(this.width * 2);
+      this.wrapper.height(this.height);
+      return this.shuttle.height(this.height);
     };
 
     FilmRoll.prototype.configureTimer = function() {
@@ -121,7 +141,8 @@
     };
 
     FilmRoll.prototype.clearTimer = function() {
-      return clearInterval(this.timer);
+      clearInterval(this.timer);
+      return this;
     };
 
     FilmRoll.prototype.marginLeft = function(rotation_index) {

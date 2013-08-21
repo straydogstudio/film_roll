@@ -62,22 +62,15 @@ class @FilmRoll
     @pager_links = @div.find('.film_roll_pager a')
     
     # find children / width / height
-    @width = @height = 0
     @children.each (i,e) =>
       @rotation.push e
       $el = jQuery(e)
       $el.attr 'style', 'position:relative; display:inline-block; vertical-align:middle'
-      _width = $el.width()
-      @width += _width
-      el_height = $el.outerHeight(true)
-      if el_height > @height
-        @height = el_height
       $el.addClass 'film_roll_child'
 
-    # set width and height
-    @shuttle.width @width * 2 # double it to take care of any styling
-    if @options.height
-      @height = parseInt(@options.height,10)
+    # set height and temporary width
+    @shuttle.width 10000 # until the page loads
+    @height = if @options.height then parseInt(@options.height,10) else 0
     @wrapper.height @height
     @shuttle.height @height
 
@@ -97,21 +90,46 @@ class @FilmRoll
 
     # set index and move to position
     @index = @options.start_index || 0
-    @moveToIndex @index, 'right', false
 
     # start timer
     @interval = @options.interval || 4000
     @animation = @options.animation || @interval/4
     unless @options.scroll is false
-      @configureTimer()
       @div.hover @clearTimer, @configureTimer
-      @prev.hover @clearTimer, @configureTimer
-      @next.hover @clearTimer, @configureTimer
+      if @options.prev && @options.next
+        @prev.hover @clearTimer, @configureTimer
+        @next.hover @clearTimer, @configureTimer
 
     # set window resize event
     jQuery(window).resize =>
       @resize()
+
+    # lastly, set the window load event to resize after images are loaded
+    jQuery(window).load =>
+      console.log 'we are loaded'
+      @configureWidths()
+      @moveToIndex @index, 'right', false
+      @configureTimer()
+
     @
+
+  configureWidths: =>
+    console.log 'config widths!'
+    # find children / width / height
+    @width = max_el_height = 0
+    @children.each (i,e) =>
+      $el = jQuery(e)
+      @width += $el.width()
+      el_height = $el.outerHeight(true)
+      if el_height > max_el_height
+        max_el_height = el_height
+    unless @options.height
+      @height = max_el_height
+
+    # set width and height
+    @shuttle.width @width * 2 # double it to take care of any styling and rotation
+    @wrapper.height @height
+    @shuttle.height @height
 
   configureTimer: =>
     @timer = setInterval =>
@@ -121,6 +139,7 @@ class @FilmRoll
 
   clearTimer: =>
     clearInterval @timer
+    @
 
   marginLeft: (rotation_index) ->
     margin = 0
