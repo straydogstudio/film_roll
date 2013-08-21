@@ -43,7 +43,7 @@ film_roll expects a parent div with children div elements:
 Using non `<div>` tags as children is untested, but may work, depending on the tag.
 
 ###Configuration
-**var film_roll = new FilmRoll({container: '#container_id', OPTIONS}) **
+**var film_roll = new FilmRoll({container: '#container_id', OPTIONS})**
 
 Params:
 
