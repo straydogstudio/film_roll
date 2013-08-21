@@ -100,8 +100,8 @@ class @FilmRoll
     @moveToIndex @index, 'right', false
 
     # start timer
-    @interval = @options.interval || 3000
-    @animation = @options.animation || @interval/3
+    @interval = @options.interval || 4000
+    @animation = @options.animation || @interval/4
     unless @options.scroll is false
       @configureTimer()
       @div.hover @clearTimer, @configureTimer

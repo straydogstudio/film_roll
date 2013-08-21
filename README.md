@@ -57,8 +57,8 @@ Options:
 - **:prev** The jquery selector for the previous button. Creates its own button by default.
 - **:next** The jquery selector for the next button. Creates its own button by default.
 - **:scroll**: Automatically scroll the carousel. True by default.
-- **:interval**: The automatic scroll interval. 3 seconds by default.
-- **:animation**: The slide animation duration. 1/3 of interval by default.
+- **:interval**: The automatic scroll interval. 4 seconds by default.
+- **:animation**: The slide animation duration. 1/4 of interval by default.
 - **:no_css**: Do not add [default css](#default-css) to page.
 
 ###Examples

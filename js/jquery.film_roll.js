@@ -98,8 +98,8 @@
       this.next.click(this.moveLeft);
       this.index = this.options.start_index || 0;
       this.moveToIndex(this.index, 'right', false);
-      this.interval = this.options.interval || 3000;
-      this.animation = this.options.animation || this.interval / 3;
+      this.interval = this.options.interval || 4000;
+      this.animation = this.options.animation || this.interval / 4;
       if (this.options.scroll !== false) {
         this.configureTimer();
         this.div.hover(this.clearTimer, this.configureTimer);
