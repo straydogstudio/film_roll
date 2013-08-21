@@ -42,6 +42,21 @@ film_roll expects a parent div with children div elements:
 
 Using non `<div>` tags as children is untested, but may work, depending on the tag.
 
+###Invoke on dom:ready
+
+Create the film_roll instance on dom:ready:
+
+```javascript
+  jQuery(function() {
+    film_roll = new FilmRoll({
+         container: '#container_id',
+         height: 560,
+         prev: '#left_button_id',
+         next: '#right_button_id',
+       });
+  })
+```
+
 ###Configuration
 **var film_roll = new FilmRoll({container: '#container_id', OPTIONS})**
 
@@ -66,22 +81,16 @@ Options:
 ###Examples
 View the [project page for working examples](https://straydogstudio.github.io/film_roll).
 
-A basic example:
-
-```javascript
-  jQuery(window).load(function() {
-  	film_roll = new FilmRoll({
-  	     container: '#container_id',
-  	     height: 560,
-  	     prev: '#left_button_id',
-  	     next: '#right_button_id',
-  	   });
-  })
-```
 
 ###On load vs. dom:loaded
 
-Currently you need to call film_roll on window.load. Centering an element requires images to be loaded. Markup and sizing/centering will be split soon so page flicker doesn't happen.
+Call film_roll on dom:ready. It configures a second event on window.load to resize itself once the content is loaded. 
+
+If, for some reason, you need to call FilmRoll on window.load, you may trigger resize manually:
+
+```javascript
+film_roll_var.configureTimer()
+```
 
 ###Styling
 
