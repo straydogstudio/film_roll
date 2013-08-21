@@ -30,7 +30,7 @@ class @FilmRoll
         .film_roll_prev:hover, .film_roll_next:hover {color:white; text-decoration:none; opacity:0.9}
         .film_roll_next {left:auto; right:15px}
         .film_roll_pager {text-align:center}
-        .film_roll_pager a {width:5px; height:5px; border:2px solid #333; border-radius:5px; display:inline-block; margin:0 5px 0 0}
+        .film_roll_pager a {width:5px; height:5px; border:2px solid #333; border-radius:5px; display:inline-block; margin:0 5px 0 0; transition: all 1s ease}
         .film_roll_pager a:hover {background: #666}
         .film_roll_pager a.active {background: #333}
         .film_roll_pager span {display:none}

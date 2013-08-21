@@ -157,7 +157,7 @@ Unless you specify no_css, film_roll adds the following css to the page header:
 	  .film_roll_prev:hover, .film_roll_next:hover {
       color: white;
       text-decoration: none;
-      opacity: 0.9
+      opacity: 0.9;
     }
 	  .film_roll_next {
       left: auto;
@@ -172,7 +172,8 @@ Unless you specify no_css, film_roll adds the following css to the page header:
       border: 2px solid #333;
       border-radius: 5px;
       display: inline-block;
-      margin: 0 5px 0 0
+      margin: 0 5px 0 0;
+      transition: all 1s ease;
     }
 	  .film_roll_pager a:hover {
       background: #666;
