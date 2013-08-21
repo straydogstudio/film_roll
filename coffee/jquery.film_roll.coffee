@@ -106,7 +106,6 @@ class @FilmRoll
 
     # lastly, set the window load event to resize after images are loaded
     jQuery(window).load =>
-      console.log 'we are loaded'
       @configureWidths()
       @moveToIndex @index, 'right', false
       @configureTimer()
@@ -114,7 +113,6 @@ class @FilmRoll
     @
 
   configureWidths: =>
-    console.log 'config widths!'
     # find children / width / height
     @width = max_el_height = 0
     @children.each (i,e) =>

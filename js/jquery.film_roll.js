@@ -102,7 +102,6 @@
         return _this.resize();
       });
       jQuery(window).load(function() {
-        console.log('we are loaded');
         _this.configureWidths();
         _this.moveToIndex(_this.index, 'right', false);
         return _this.configureTimer();
@@ -113,7 +112,6 @@
     FilmRoll.prototype.configureWidths = function() {
       var max_el_height,
         _this = this;
-      console.log('config widths!');
       this.width = max_el_height = 0;
       this.children.each(function(i, e) {
         var $el, el_height;
