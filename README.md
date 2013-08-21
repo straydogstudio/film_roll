@@ -108,18 +108,83 @@ Unless you specify no_css, film_roll adds the following css to the page header:
 
 ```html
 	<style type='text/css'>
-	   .film_roll_wrapper {display: block; text-align: center; float: none; position: relative; top: auto; right: auto; bottom: auto; left: auto; z-index: auto; width: 100%; margin: 0px; overflow: hidden; width: 100%}
-	   .film_roll_shuttle {text-align: left; float: none; position: absolute; top: 0; left:0; right: auto; bottom: auto; margin: 0px; z-index: auto}
-	   .film_roll_prev, .film_roll_next {position:absolute; top:48%; left:15px; width:40px; height:40px; margin:-20px 0 0 0; padding:0; font-size:60px; font-weight:100; line-height:30px; color:white; text-align: center; background: #222; border: 3px solid white; border-radius:23px; opacity:0.5}
-	   .film_roll_prev:hover, .film_roll_next:hover {color:white; text-decoration:none; opacity:0.9}
-	   .film_roll_next {left:auto; right:15px}
-	   .film_roll_pager {text-align:center}
-	   .film_roll_pager a {width:5px; height:5px; border:2px solid #333; border-radius:5px; display:inline-block; margin:0 5px 0 0}
-	   .film_roll_pager a:hover {background: #666}
-	   .film_roll_pager a.active {background: #333}
-	   .film_roll_pager span {display:none}
-	 </style>
+	  .film_roll_wrapper {
+      display: block;
+      text-align: center;
+      float: none;
+      position: relative;
+      top: auto;
+      right: auto;
+      bottom: auto;
+      left: auto;
+      z-index: auto;
+      width: 100%;
+      margin: 0px;
+      overflow: hidden;
+      width: 100%;
+    }
+	  .film_roll_shuttle {
+      text-align: left;
+      float: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: auto;
+      bottom: auto;
+      margin: 0px;
+      z-index: auto;
+    }
+	  .film_roll_prev, .film_roll_next {
+      position: absolute;
+      top: 48%;
+      left: 15px;
+      width: 40px;
+      height: 40px;
+      margin: -20px 0 0 0;
+      padding: 0;
+      font-size: 60px;
+      font-weight: 100;
+      line-height: 30px;
+      color: white;
+      text-align: center;
+      background: #222;
+      border: 3px solid white;
+      border-radius: 23px;
+      opacity: 0.5;
+    }
+	  .film_roll_prev:hover, .film_roll_next:hover {
+      color: white;
+      text-decoration: none;
+      opacity: 0.9
+    }
+	  .film_roll_next {
+      left: auto;
+      right: 15px;
+    }
+	  .film_roll_pager {
+      text-align: center;
+    }
+	  .film_roll_pager a {
+      width: 5px;
+      height: 5px;
+      border: 2px solid #333;
+      border-radius: 5px;
+      display: inline-block;
+      margin: 0 5px 0 0
+    }
+	  .film_roll_pager a:hover {
+      background: #666;
+    }
+	  .film_roll_pager a.active {
+      background: #333;
+    }
+	  .film_roll_pager span {
+      display: none;
+    }
+	</style>
 ```
+
+Add it to your own css and disable with `no_css: true` when calling FilmRoll.
 
 ##TODO
 
