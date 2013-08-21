@@ -22,7 +22,7 @@
 
 ###Installation
 
-- Download [jquery.film_roll.min.js](https://github.com/straydogstudio/film_roll/js/jquery.film_roll.min.js) and place it in your scripts directory
+- Download [jquery.film_roll.min.js](https://raw.github.com/straydogstudio/film_roll/master/js/jquery.film_roll.min.js) and place it in your scripts directory
 - Link it in your web page: `<script src="js/jquery.film_roll.js"></script>`
 
 ###Markup
@@ -64,7 +64,7 @@ Options:
 
 
 ###Examples
-View the [project page for working examples](https://straydogstudio.github.com/film_roll).
+View the [project page for working examples](https://straydogstudio.github.io/film_roll).
 
 A basic example:
 
