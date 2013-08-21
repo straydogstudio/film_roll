@@ -69,7 +69,8 @@ class @FilmRoll
       $el.addClass 'film_roll_child'
 
     # set height and temporary width
-    @shuttle.width 10000 # until the page loads
+    shuttle_width = if @options.shuttle_width then parseInt(@options.shuttle_width,10) else 10000
+    @shuttle.width shuttle_width # until the page loads
     @height = if @options.height then parseInt(@options.height,10) else 0
     @wrapper.height @height
     @shuttle.height @height

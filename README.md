@@ -60,6 +60,8 @@ Options:
 - **:interval**: The automatic scroll interval. 4 seconds by default.
 - **:animation**: The slide animation duration. 1/4 of interval by default.
 - **:no_css**: Do not add [default css](#default-css) to page.
+- **:shuttle_width**: The starting shuttle width until the page loads. Defaults to 10000. See [troubleshooting](#troubleshooting).
+
 
 ###Examples
 View the [project page for working examples](https://straydogstudio.github.com/film_roll).
@@ -185,6 +187,12 @@ Unless you specify no_css, film_roll adds the following css to the page header:
 ```
 
 Add it to your own css and disable with `no_css: true` when calling FilmRoll.
+
+##Troubleshooting
+
+###Shuttle width
+
+FilmRoll sets the shuttle (the the div that holds all elements and slides back and forth) to 10000 pixels wide until the page loads. When the page loads, the content is used to determine the appropriate width. If, for some reason, 10000 pixels is not enough, and you get a strange flash on page load, try setting this number higher. 
 
 ##TODO
 
