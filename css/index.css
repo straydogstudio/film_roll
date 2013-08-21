@@ -16,6 +16,7 @@ body {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 }
 .hero-unit h1, .hero-unit p.white { color: white; }
+.hero-unit h1 img { vertical-align: bottom; }
 .hero-unit p { margin-top: 30px; }
 .film_roll_wrapper img {
   border: 10px solid white;
