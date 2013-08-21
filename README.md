@@ -29,7 +29,7 @@
 
 film_roll expects a parent div with children div elements:
 
-	```html
+```html
 	<div id="film_roll">
 	  <div>
 	    <a href="..."><img src="..."> </a>
@@ -38,7 +38,7 @@ film_roll expects a parent div with children div elements:
 	    <a href="..."><img src="..."> </a>
 	  </div>
 	</div>
-	```
+```
 
 Using non `<div>` tags as children is untested, but may work, depending on the tag.
 
@@ -66,7 +66,7 @@ View the [project page for working examples](https://film_roll.github.com).
 
 A basic example:
 
-```html
+```javascript
   jQuery(window).load(function() {
   	film_roll = new FilmRoll({
   	     container: '#container_id',
@@ -107,7 +107,7 @@ Use these classes to apply styling and effects. See the example page.
 Unless you specify no_css, film_roll adds the following css to the page header:
 
 ```html
-	<style type='text/css'>
+<style type='text/css'>
 	  .film_roll_wrapper {
       display: block;
       text-align: center;
@@ -181,7 +181,7 @@ Unless you specify no_css, film_roll adds the following css to the page header:
 	  .film_roll_pager span {
       display: none;
     }
-	</style>
+</style>
 ```
 
 Add it to your own css and disable with `no_css: true` when calling FilmRoll.
