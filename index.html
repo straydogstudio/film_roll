@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="css/index.css">
+
+        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    </head>
+    <body>
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="https://github.com/straydogstudio/film_roll">Film Roll</a>
+                    <div class="nav-collapse collapse">
+                      <ul class="nav">
+                        <li><a href="https://github.com/straydogstudio" target="_blank">Github</a></li>
+                        <li><a href="http://jquery.com" target="_blank">jQuery</a></li>
+                      </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-unit">
+            <h1>Film Roll: jQuery Carousel</h1>
+            <p class='white'>Film Roll is a lightweight carousel that focuses on one item, centering it in the view:</p>
+
+            <div id='film_roll_1'>
+              <div><a href='#'><img src="http://placehold.it/530x530"></a></div>
+              <div><a href='#'><img src="http://placehold.it/700x530"></a></div>
+              <div><a href='#'><img src="http://placehold.it/800x530"></a></div>
+              <div><a href='#'><img src="http://placehold.it/800x530"></a></div>
+              <div><a href='#'><img src="http://placehold.it/530x530"></a></div>
+            </div>
+
+            <p>
+              It works with both large and small items,
+              can use external buttons,
+              and more:
+            </p>
+            <div class='film_roll_container'>
+            <div id='film_roll_2'>
+              <div><a href='#'><img src="http://placehold.it/230x150"></a></div>
+              <div><a href='#'><img src="http://placehold.it/100x150"></a></div>
+              <div><a href='#'><img src="http://placehold.it/200x150"></a></div>
+              <div><a href='#'><img src="http://placehold.it/230x150"></a></div>
+              <div><a href='#'><img src="http://placehold.it/300x150"></a></div>
+              <div><a href='#'><img src="http://placehold.it/330x150"></a></div>
+            </div>
+            <a href='#' class='btn btn-primary' id='film_roll_2_left'>&lsaquo; Left</a>
+            <a href='#' class='btn btn-primary' id='film_roll_2_right'>Right &rsaquo;</a>
+            </div>
+
+        </div>
+
+        <div class="container">
+
+            <!-- Example row of columns -->
+            <div class="row">
+                <div class="span8">
+                    <h2>Installation / Configuration</h2>
+                    <ul>
+                      <li>Download jquery.film_roll.js (9kb) or jquery.film_roll.min.js (6kb)</li>
+                      <li>
+                        Link it in your page: 
+                        <pre>&lt;script src="js/jquery.film_roll.js"&gt;&lt;/script&gt;</pre>
+                      </li>
+                      <li>
+                        Add markup:
+<pre>&lt;div id="film_roll"&gt;
+  &lt;div&gt;
+    &lt;a href="..."&gt;&lt;img src="..."&gt; &lt;/a&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;a href="..."&gt;&lt;img src="..."&gt; &lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+                      </li>
+                      <li>
+                        Fire it up:
+<pre>&lt;script&gt;
+fr = new FilmRoll({
+  container: '#film_roll',
+  pager: true
+});
+&lt;/script&gt;</pre>
+                      </li>
+                    </ul>
+                    <p><a class="btn" href="https://github.com/straydogstudio/film_roll">View options &raquo;</a></p>
+                </div>
+                <div class="span4">
+                    <h2>Why?</h2>
+                    <p>Strangely enough, I could not find a jQuery carousel plugin that centered the selected item on the page, especially when all of the items had varying widths. So here you go.</p>
+                    <p><a class="btn" href="https://github.com/straydogstudio/film_roll">View more &raquo;</a></p>
+                </div>
+            </div>
+
+            <hr>
+
+            <footer>
+                <p>&copy; StrayDogStudio 2013</p>
+            </footer>
+
+        </div> <!-- /container -->
+
+        <script src="js/vendor/jquery-1.10.1.min.js"></script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/jquery.film_roll.js"></script>
+        <script src="js/index.js"></script>
+    </body>
+</html>
