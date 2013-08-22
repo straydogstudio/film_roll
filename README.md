@@ -4,7 +4,7 @@
 
 ##Description
 
-**film_roll** is a lightweight jQuery carousel that focuses on one item at a time, centering it in the view, regardless of the relative sizes of the carousel items.
+**FilmRoll** is a lightweight jQuery carousel that focuses on one item at a time, centering it in the view, regardless of the relative sizes of the carousel items.
 
 [**SEE DEMO**](http://straydogstudio.github.io/film_roll)
 
@@ -27,7 +27,7 @@
 
 ###Markup
 
-film_roll expects a parent div with children div elements, though it should work with most any child element:
+FilmRoll expects a parent div with children div elements, though it should work with most any child element:
 
 ```html
 	<div id="film_roll">
@@ -44,7 +44,7 @@ Using non `<div>` tags as children is untested, but may work, depending on the t
 
 ###Create
 
-Create the film_roll instance on dom:ready:
+Create the FilmRoll instance on dom:ready:
 
 ```javascript
   jQuery(function() {
@@ -84,7 +84,7 @@ View the [project page for working examples](https://straydogstudio.github.io/fi
 
 ###On load vs. dom:loaded
 
-film_roll is written to be called on dom:ready. It inserts all markup before display and configures itself to resize itself once the content is loaded (after the window.load event.)
+FilmRoll is written to be called on dom:ready. It inserts all markup before display and configures itself to resize itself once the content is loaded (after the window.load event.)
 
 If, for some reason, you need to call FilmRoll on window.load, or create it using an in page script, trigger resize manually:
 
@@ -94,7 +94,7 @@ film_roll_var.configureWidths()
 
 ###Styling
 
-film_roll takes the following markup:
+FilmRoll takes the following markup:
 
 ```html
   <div id="film_roll">
@@ -120,7 +120,7 @@ Use these classes to apply styling and effects. See the example page.
 
 ## Default CSS
 
-Unless you specify no_css, film_roll adds the following css to the page header:
+Unless you specify no_css, FilmRoll adds the following css to the page header:
 
 ```css
 .film_roll_wrapper {
@@ -214,7 +214,7 @@ FilmRoll sets the shuttle (the the div that holds all elements and slides back a
 
 ## Development
 
-Fork the project on [github](https://github.com/straydogstudio/film_roll 'straydogstudio / film_roll on Github')
+Fork the project on [github](https://github.com/straydogstudio/film_roll 'straydogstudio / FilmRoll on Github')
 
 ##Authors, License and Stuff
 
