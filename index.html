@@ -38,8 +38,8 @@
         </div>
 
         <div class="hero-unit">
-            <h1><img src="img/film_roll.png"> Film Roll: jQuery Carousel</h1>
-            <p class='white'>Film Roll is a lightweight carousel that focuses on one item, centering it in the view:</p>
+            <h1><img src="img/film_roll.png"> FilmRoll: jQuery Carousel</h1>
+            <p class='white'>FilmRoll is a lightweight carousel that focuses on one item, centering it in the view:</p>
 
             <div id='film_roll_1'>
               <div><a href='#'><img src="http://placehold.it/530x530"></a></div>
@@ -95,9 +95,11 @@
                       <li>
                         Fire it up:
 <pre>&lt;script&gt;
-fr = new FilmRoll({
-  container: '#film_roll',
-  pager: true
+$(function() {
+  fr = new FilmRoll({
+    container: '#film_roll',
+    height: 330
+  });
 });
 &lt;/script&gt;</pre>
                       </li>
@@ -107,6 +109,7 @@ fr = new FilmRoll({
                 <div class="span4">
                     <h2>Why?</h2>
                     <p>Strangely enough, I could not find a jQuery carousel plugin that centered the selected item on the page, especially when all of the items had varying widths. So here you go.</p>
+                    <p>(Yes, I know there are album cover flippers, but that was not what I needed.)</p>
                     <p><a class="btn" href="https://github.com/straydogstudio/film_roll">View more &raquo;</a></p>
                 </div>
             </div>

@@ -34,8 +34,10 @@ body {
 #film_roll_2 .film_roll_shuttle {
   top:10px;
 }
-#film_roll_2 .film_roll_child.active {
+#film_roll_2 .film_roll_child {
   transition: all 1s ease;
+}
+#film_roll_2 .film_roll_child.active {
   top: -10px;
 }
 #film_roll_2_left {

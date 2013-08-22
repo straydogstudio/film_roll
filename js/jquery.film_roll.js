@@ -27,6 +27,7 @@
       this.moveLeft = __bind(this.moveLeft, this);
       this.clearTimer = __bind(this.clearTimer, this);
       this.configureTimer = __bind(this.configureTimer, this);
+      this.configureWidths = __bind(this.configureWidths, this);
       if (this.options === null) {
         this.options = {};
       }
@@ -37,9 +38,10 @@
     }
 
     FilmRoll.prototype.configure = function() {
-      var _this = this;
+      var shuttle_width,
+        _this = this;
       if (!(this.options.no_css === true || document.film_roll_styles_added)) {
-        jQuery("<style type='text/css'>        .film_roll_wrapper {display: block; text-align: center; float: none; position: relative; top: auto; right: auto; bottom: auto; left: auto; z-index: auto; width: 100%; margin: 0px; overflow: hidden; width: 100%}        .film_roll_shuttle {text-align: left; float: none; position: absolute; top: 0; left:0; right: auto; bottom: auto; margin: 0px; z-index: auto}        .film_roll_prev, .film_roll_next {position:absolute; top:48%; left:15px; width:40px; height:40px; margin:-20px 0 0 0; padding:0; font-size:60px; font-weight:100; line-height:30px; color:white; text-align: center; background: #222; border: 3px solid white; border-radius:23px; opacity:0.5}        .film_roll_prev:hover, .film_roll_next:hover {color:white; text-decoration:none; opacity:0.9}        .film_roll_next {left:auto; right:15px}        .film_roll_pager {text-align:center}        .film_roll_pager a {width:5px; height:5px; border:2px solid #333; border-radius:5px; display:inline-block; margin:0 5px 0 0}        .film_roll_pager a:hover {background: #666}        .film_roll_pager a.active {background: #333}        .film_roll_pager span {display:none}      </style>").appendTo('head');
+        jQuery("<style type='text/css'>        .film_roll_wrapper {display: block; text-align: center; float: none; position: relative; top: auto; right: auto; bottom: auto; left: auto; z-index: auto; width: 100%; margin: 0px; overflow: hidden; width: 100%}        .film_roll_shuttle {text-align: left; float: none; position: absolute; top: 0; left:0; right: auto; bottom: auto; margin: 0px; z-index: auto}        .film_roll_prev, .film_roll_next {position:absolute; top:48%; left:15px; width:40px; height:40px; margin:-20px 0 0 0; padding:0; font-size:60px; font-weight:100; line-height:30px; color:white; text-align: center; background: #222; border: 3px solid white; border-radius:23px; opacity:0.5}        .film_roll_prev:hover, .film_roll_next:hover {color:white; text-decoration:none; opacity:0.9}        .film_roll_next {left:auto; right:15px}        .film_roll_pager {text-align:center}        .film_roll_pager a {width:5px; height:5px; border:2px solid #333; border-radius:5px; display:inline-block; margin:0 5px 0 0; transition: all 1s ease}        .film_roll_pager a:hover {background: #666}        .film_roll_pager a.active {background: #333}        .film_roll_pager span {display:none}      </style>").appendTo('head');
         document.film_roll_styles_added = true;
       }
       this.children = this.div.children();
@@ -65,24 +67,16 @@
         });
       }
       this.pager_links = this.div.find('.film_roll_pager a');
-      this.width = this.height = 0;
       this.children.each(function(i, e) {
-        var $el, el_height, _width;
+        var $el;
         _this.rotation.push(e);
         $el = jQuery(e);
         $el.attr('style', 'position:relative; display:inline-block; vertical-align:middle');
-        _width = $el.width();
-        _this.width += _width;
-        el_height = $el.outerHeight(true);
-        if (el_height > _this.height) {
-          _this.height = el_height;
-        }
         return $el.addClass('film_roll_child');
       });
-      this.shuttle.width(this.width * 2);
-      if (this.options.height) {
-        this.height = parseInt(this.options.height, 10);
-      }
+      shuttle_width = this.options.shuttle_width ? parseInt(this.options.shuttle_width, 10) : 10000;
+      this.shuttle.width(shuttle_width);
+      this.height = this.options.height ? parseInt(this.options.height, 10) : 0;
       this.wrapper.height(this.height);
       this.shuttle.height(this.height);
       if (this.options.prev && this.options.next) {
@@ -97,19 +91,45 @@
       this.prev.click(this.moveRight);
       this.next.click(this.moveLeft);
       this.index = this.options.start_index || 0;
-      this.moveToIndex(this.index, 'right', false);
       this.interval = this.options.interval || 4000;
       this.animation = this.options.animation || this.interval / 4;
       if (this.options.scroll !== false) {
-        this.configureTimer();
         this.div.hover(this.clearTimer, this.configureTimer);
-        this.prev.hover(this.clearTimer, this.configureTimer);
-        this.next.hover(this.clearTimer, this.configureTimer);
+        if (this.options.prev && this.options.next) {
+          this.prev.hover(this.clearTimer, this.configureTimer);
+          this.next.hover(this.clearTimer, this.configureTimer);
+        }
       }
       jQuery(window).resize(function() {
         return _this.resize();
       });
+      jQuery(window).load(function() {
+        _this.configureWidths();
+        _this.moveToIndex(_this.index, 'right', false);
+        return _this.configureTimer();
+      });
       return this;
+    };
+
+    FilmRoll.prototype.configureWidths = function() {
+      var max_el_height,
+        _this = this;
+      this.width = max_el_height = 0;
+      this.children.each(function(i, e) {
+        var $el, el_height;
+        $el = jQuery(e);
+        _this.width += $el.width();
+        el_height = $el.outerHeight(true);
+        if (el_height > max_el_height) {
+          return max_el_height = el_height;
+        }
+      });
+      if (!this.options.height) {
+        this.height = max_el_height;
+      }
+      this.shuttle.width(this.width * 2);
+      this.wrapper.height(this.height);
+      return this.shuttle.height(this.height);
     };
 
     FilmRoll.prototype.configureTimer = function() {
@@ -121,7 +141,8 @@
     };
 
     FilmRoll.prototype.clearTimer = function() {
-      return clearInterval(this.timer);
+      clearInterval(this.timer);
+      return this;
     };
 
     FilmRoll.prototype.marginLeft = function(rotation_index) {
