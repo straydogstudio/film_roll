@@ -27,7 +27,7 @@
 
 ###Markup
 
-film_roll expects a parent div with children div elements:
+film_roll expects a parent div with children div elements, though it should work with most any child element:
 
 ```html
 	<div id="film_roll">
@@ -42,7 +42,7 @@ film_roll expects a parent div with children div elements:
 
 Using non `<div>` tags as children is untested, but may work, depending on the tag.
 
-###Invoke on dom:ready
+###Create
 
 Create the film_roll instance on dom:ready:
 
@@ -62,15 +62,15 @@ Create the film_roll instance on dom:ready:
 
 Params:
 
-- **container** (Mandatory): The div that contains all elements that are to be displayed.
+- **:container** (Mandatory): The div that contains all elements that are to be displayed.
+- **:height** (Mandatory - sort of) Set the height of the scroll container. The height of the tallest element by default. You may have flashing problems on load or cover up css effects if you do not set this.
 
 Options:
 
-- **:start_index** The index of the first element to center
-- **:pager** Display pagination dots at the bottom of the carousel. True by default.
-- **:height** Set the height of the scroll container. The height of the tallest element by default. (Note: You may have to specify this to account for css effects.)
-- **:prev** The jquery selector for the previous button. Creates its own button by default.
-- **:next** The jquery selector for the next button. Creates its own button by default.
+- **:start_index**: The index of the first element to center
+- **:pager**: Display pagination dots at the bottom of the carousel. True by default.
+- **:prev**: The jquery selector for the previous button. Creates its own button by default.
+- **:next**: The jquery selector for the next button. Creates its own button by default.
 - **:scroll**: Automatically scroll the carousel. True by default.
 - **:interval**: The automatic scroll interval. 4 seconds by default.
 - **:animation**: The slide animation duration. 1/4 of interval by default.
@@ -84,28 +84,33 @@ View the [project page for working examples](https://straydogstudio.github.io/fi
 
 ###On load vs. dom:loaded
 
-Call film_roll on dom:ready. It configures a second event on window.load to resize itself once the content is loaded. 
+film_roll is written to be called on dom:ready. It inserts all markup before display and configures itself to resize itself once the content is loaded (after the window.load event.)
 
-If, for some reason, you need to call FilmRoll on window.load, you may trigger resize manually:
+If, for some reason, you need to call FilmRoll on window.load, or create it using an in page script, trigger resize manually:
 
 ```javascript
-film_roll_var.configureTimer()
+film_roll_var.configureWidths()
 ```
 
 ###Styling
 
-film_roll wraps all children with two divs, and adds the `active` class to the centered element:
+film_roll takes the following markup:
+
+```html
+  <div id="film_roll">
+    <div class="active">...</div>
+    <div class="active">...</div>
+  </div>
+```
+
+and wraps all children with two divs, adds the class `film_roll_child` and a style element to the children, and adds the 'active' class to the centered child:
 
 ```html
   <div id="film_roll">
     <div class="film_roll_wrapper">
       <div class="film_roll_shuttle">
-        <div class="active">
-          <a href="..."><img src="..."> </a>
-        </div>
-        <div>
-          <a href="..."><img src="..."> </a>
-        </div>
+        <div class="active film_roll_child" style="position:relative; display:inline-block; vertical-align:middle">…</div>
+        <div class="film_roll_child">…</div>
       </div>
     </div>
   </div>
@@ -117,92 +122,90 @@ Use these classes to apply styling and effects. See the example page.
 
 Unless you specify no_css, film_roll adds the following css to the page header:
 
-```html
-<style type='text/css'>
-	  .film_roll_wrapper {
-      display: block;
-      text-align: center;
-      float: none;
-      position: relative;
-      top: auto;
-      right: auto;
-      bottom: auto;
-      left: auto;
-      z-index: auto;
-      width: 100%;
-      margin: 0px;
-      overflow: hidden;
-      width: 100%;
-    }
-	  .film_roll_shuttle {
-      text-align: left;
-      float: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: auto;
-      bottom: auto;
-      margin: 0px;
-      z-index: auto;
-    }
-	  .film_roll_prev, .film_roll_next {
-      position: absolute;
-      top: 48%;
-      left: 15px;
-      width: 40px;
-      height: 40px;
-      margin: -20px 0 0 0;
-      padding: 0;
-      font-size: 60px;
-      font-weight: 100;
-      line-height: 30px;
-      color: white;
-      text-align: center;
-      background: #222;
-      border: 3px solid white;
-      border-radius: 23px;
-      opacity: 0.5;
-    }
-	  .film_roll_prev:hover, .film_roll_next:hover {
-      color: white;
-      text-decoration: none;
-      opacity: 0.9;
-    }
-	  .film_roll_next {
-      left: auto;
-      right: 15px;
-    }
-	  .film_roll_pager {
-      text-align: center;
-    }
-	  .film_roll_pager a {
-      width: 5px;
-      height: 5px;
-      border: 2px solid #333;
-      border-radius: 5px;
-      display: inline-block;
-      margin: 0 5px 0 0;
-      transition: all 1s ease;
-    }
-	  .film_roll_pager a:hover {
-      background: #666;
-    }
-	  .film_roll_pager a.active {
-      background: #333;
-    }
-	  .film_roll_pager span {
-      display: none;
-    }
-</style>
+```css
+.film_roll_wrapper {
+   display: block;
+   text-align: center;
+   float: none;
+   position: relative;
+   top: auto;
+   right: auto;
+   bottom: auto;
+   left: auto;
+   z-index: auto;
+   width: 100%;
+   margin: 0px;
+   overflow: hidden;
+   width: 100%;
+ }
+.film_roll_shuttle {
+   text-align: left;
+   float: none;
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: auto;
+   bottom: auto;
+   margin: 0px;
+   z-index: auto;
+ }
+.film_roll_prev, .film_roll_next {
+   position: absolute;
+   top: 48%;
+   left: 15px;
+   width: 40px;
+   height: 40px;
+   margin: -20px 0 0 0;
+   padding: 0;
+   font-size: 60px;
+   font-weight: 100;
+   line-height: 30px;
+   color: white;
+   text-align: center;
+   background: #222;
+   border: 3px solid white;
+   border-radius: 23px;
+   opacity: 0.5;
+ }
+.film_roll_prev:hover, .film_roll_next:hover {
+   color: white;
+   text-decoration: none;
+   opacity: 0.9;
+ }
+.film_roll_next {
+   left: auto;
+   right: 15px;
+ }
+.film_roll_pager {
+   text-align: center;
+ }
+.film_roll_pager a {
+   width: 5px;
+   height: 5px;
+   border: 2px solid #333;
+   border-radius: 5px;
+   display: inline-block;
+   margin: 0 5px 0 0;
+   transition: all 1s ease;
+ }
+.film_roll_pager a:hover {
+   background: #666;
+ }
+.film_roll_pager a.active {
+   background: #333;
+ }
+.film_roll_pager span {
+   display: none;
+ }
 ```
 
-Add it to your own css and disable with `no_css: true` when calling FilmRoll.
+Add it to your own css and disable with `no_css: true` when calling FilmRoll to improve performance.
 
 ##Troubleshooting
 
 ###Shuttle width
 
-FilmRoll sets the shuttle (the the div that holds all elements and slides back and forth) to 10000 pixels wide until the page loads. When the page loads, the content is used to determine the appropriate width. If, for some reason, 10000 pixels is not enough, and you get a strange flash on page load, try setting this number higher. 
+FilmRoll sets the shuttle (the the div that holds all elements and slides back and forth) to 10000 pixels wide until the page loads. When the page loads, the content is used to determine the appropriate width. If, for some reason, 10000 pixels is not enough, and you get a strange flash on page load, try setting `shuttle_width` higher. 
 
 ##TODO
 
