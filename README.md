@@ -76,6 +76,7 @@ Options:
 - **:animation**: The slide animation duration. 1/4 of interval by default.
 - **:no_css**: Do not add [default css](#default-css) to page.
 - **:shuttle_width**: The starting shuttle width until the page loads. Defaults to 10000. See [troubleshooting](#troubleshooting).
+- **:expand**: True or false. By default, if the content width is between 1 and 2 times the width of the container, FilmRoll copies the children on both left and right sides to prevent blanks from appearing. Element ids are mangled so they do not repeat. Setting this to true or false will force this either way. 
 
 
 ###Examples
