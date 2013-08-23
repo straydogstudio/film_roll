@@ -14,11 +14,11 @@
 ###
 class @FilmRoll
 
-  constructor: (@options) ->
-    @options = {} if @options is null
+  constructor: (@options = {}) ->
     if @options.container
       @div = jQuery @options.container
-      @configure()
+      if @div.length
+        @configure()
 
   configure: ->
     # add styling
@@ -61,12 +61,14 @@ class @FilmRoll
           @moveToIndex @index, direction, true
     @pager_links = @div.find('.film_roll_pager a')
     
-    # find children / width / height
+    # set classes and get rotation
+    first_child = null
     @children.each (i,e) =>
-      @rotation.push e
       $el = jQuery(e)
       $el.attr 'style', 'position:relative; display:inline-block; vertical-align:middle'
-      $el.addClass 'film_roll_child'
+      $el.attr 'data-film-roll-child-id', i
+      $el.addClass "film_roll_child"
+      @rotation.push e
 
     # set height and temporary width
     shuttle_width = if @options.shuttle_width then parseInt(@options.shuttle_width,10) else 10000
@@ -92,14 +94,18 @@ class @FilmRoll
     # set index and move to position
     @index = @options.start_index || 0
 
+    # expand unless blocked
+    if @options.expand is true
+      @expand()
+
     # start timer
     @interval = @options.interval || 4000
     @animation = @options.animation || @interval/4
     unless @options.scroll is false
-      @div.hover @clearTimer, @configureTimer
+      @div.hover @clearScroll, @configureScroll
       if @options.prev && @options.next
-        @prev.hover @clearTimer, @configureTimer
-        @next.hover @clearTimer, @configureTimer
+        @prev.hover @clearScroll, @configureScroll
+        @next.hover @clearScroll, @configureScroll
 
     # set window resize event
     jQuery(window).resize =>
@@ -109,7 +115,8 @@ class @FilmRoll
     jQuery(window).load =>
       @configureWidths()
       @moveToIndex @index, 'right', false
-      @configureTimer()
+      unless @options.scroll is false
+        @configureScroll()
 
     @
 
@@ -126,30 +133,59 @@ class @FilmRoll
       @height = max_el_height
 
     # set width and height
-    @shuttle.width @width * 2 # double it to take care of any styling and rotation
     @wrapper.height @height
     @shuttle.height @height
+    @real_width = @width
 
-  configureTimer: =>
+    # expand if not quite wide enough
+    wrapper_width = @wrapper.width()
+    if wrapper_width < @real_width and wrapper_width * 2 > @real_width and not @options.expand?
+      @expand()
+
+    # set shuttle width
+    @real_width *= 3 if @options.expand is true
+    @shuttle.width @real_width * 2 # double it to take care of any styling and rotation  
+
+    @
+
+  configureScroll: =>
     @timer = setInterval =>
       @moveLeft()
     , @interval
     @
 
-  clearTimer: =>
+  clearScroll: =>
     clearInterval @timer
     @
 
-  marginLeft: (rotation_index) ->
+  expand: =>
+    @options.expand = true
+    first_child = null
+    @children.each (i,e) =>
+      $el = jQuery(e)
+      first_child ||= $el
+      post = $el.clone()
+      pre  = $el.clone()
+      id   = $el.attr 'id'
+      if id
+        post.attr 'id', id+'_post'
+        pre.attr  'id', id+'_pre'
+      @shuttle.append post
+      first_child.before pre
+
+  marginLeft: (rotation_index, offset = 0) ->
     margin = 0
-    for child, i in @rotation when i < rotation_index
-      margin += jQuery(child).width()
+    for child, i in @rotation
+      if i < rotation_index and i>= offset
+        margin += jQuery(child).width()
     margin
 
-  marginRight: (rotation_index) ->
+  marginRight: (rotation_index, offset = 0) ->
+    offset = @rotation.length - offset - 1
     margin = 0
-    for child, i in @rotation when i > rotation_index
-      margin += jQuery(child).width()
+    for child, i in @rotation
+      if i > rotation_index and i <= offset
+        margin += jQuery(child).width()
     margin
 
   moveLeft: =>
@@ -164,34 +200,45 @@ class @FilmRoll
     @moveToIndex @index, 'right', true
     return false
 
-  moveToIndex: (index, direction, animate) ->
-    animate = true if animate is null
-    @children.removeClass 'active'
-    @pager_links.removeClass 'active'
+  moveToIndex: (index, direction, animate = true) ->
     child = @children[index]
-    jQuery(child).addClass 'active'
+    rotation_index = jQuery.inArray child, @rotation
+    if @options.expand
+      html_children = @shuttle.children()
+      html_children.removeClass 'active'
+      jQuery(html_children[rotation_index + @children.length]).addClass 'active'
+    else
+      @children.removeClass 'active'
+      jQuery(child).addClass 'active'
+    # adjust pager
+    @pager_links.removeClass 'active'
     jQuery(@pager_links[index]).addClass 'active'
+    # if shuttle width is wider than the wrapper, we need to rotate
     wrapper_width = @wrapper.width()
-    if wrapper_width < @width # rotate if the children are wider than the container
+    if wrapper_width < @real_width # rotate if the children are wider than the container
       # first, where is this photo? 
-      rotation_index = jQuery.inArray child, @rotation
       # what should show on either side of this child
       visible_margin = (wrapper_width - jQuery(child).width())/2
       if direction == 'right'
-        # rotate so blank space won't show at the end
+        # rotate so blank space won't show after animation
         while rotation_index == 0 or @marginLeft(rotation_index) < visible_margin
           @rotateRight()
           rotation_index = jQuery.inArray child, @rotation
       else # we are moving left
-        # rotate so blank space won't show at the end
+        # rotate so blank space won't show after animation
         while rotation_index == @children.length - 1 or @marginRight(rotation_index) < visible_margin
           @rotateLeft()
           rotation_index = jQuery.inArray child, @rotation
       new_left_margin = -1*(@marginLeft(rotation_index)-visible_margin)
+      if @options.expand
+        new_left_margin -= @width
       if animate
         @shuttle.animate { 'left': new_left_margin }, @animation, 'swing'
       else
         @shuttle.css 'left', new_left_margin
+    else
+      @shuttle.css 'left', (wrapper_width - @width)/2
+    @
 
   resize: ->
     clearTimeout @resize_timer
@@ -205,14 +252,15 @@ class @FilmRoll
     _shuttle_left = if _css_left then parseInt(_css_left, 10) else 0
     _first_child = @rotation.shift()
     @rotation.push _first_child
-    @shuttle.append jQuery(_first_child).detach()
     @shuttle.css 'left', _shuttle_left + jQuery(_first_child).width()
+    @shuttle.append @shuttle.children().first().detach()
 
   rotateRight: =>
     _css_left = @shuttle.css('left')
     _shuttle_left = if _css_left then parseInt(_css_left, 10) else 0
     _last_child = @rotation.pop()
     @rotation.unshift _last_child
-    @shuttle.prepend jQuery(_last_child).detach()
     @shuttle.css 'left', _shuttle_left - jQuery(_last_child).width()
+    @shuttle.prepend @shuttle.children().last().detach()
+
 
