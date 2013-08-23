@@ -10,9 +10,13 @@
     this.film_rolls['film_roll_2'] = new FilmRoll({
       container: '#film_roll_2',
       height: 190,
-      pager: false,
       prev: '#film_roll_2_left',
       next: '#film_roll_2_right'
+    });
+    this.film_rolls['film_roll_3'] = new FilmRoll({
+      container: '#film_roll_3',
+      height: 190,
+      pager: false
     });
     return true;
   });
