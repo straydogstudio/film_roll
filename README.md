@@ -75,7 +75,7 @@ Options:
 - **:interval**: The automatic scroll interval. 4 seconds by default.
 - **:animation**: The slide animation duration. 1/4 of interval by default.
 - **:no_css**: Do not add [default css](#default-css) to page.
-- **:shuttle_width**: The starting shuttle width until the page loads. Defaults to 10000. See [troubleshooting](#troubleshooting).
+- **:shuttle_width**: The starting shuttle width until the page loads. Defaults to 10000. See [troubleshooting](#double-rows-on-start-shuttle-width).
 
 ###Examples
 View the [project page for working examples](https://straydogstudio.github.io/film_roll).
