@@ -1,4 +1,4 @@
-# Film Roll
+#FilmRoll
 **A lightweight jQuery carousel**
 
 
@@ -40,7 +40,7 @@ FilmRoll expects a parent div with children div elements, though it should work 
 	</div>
 ```
 
-Using non `<div>` tags as children is untested, but may work, depending on the tag.
+Using non `<div>` tags as children is untested, but may work, depending on the tag and styling.
 
 ###Create
 
@@ -76,8 +76,6 @@ Options:
 - **:animation**: The slide animation duration. 1/4 of interval by default.
 - **:no_css**: Do not add [default css](#default-css) to page.
 - **:shuttle_width**: The starting shuttle width until the page loads. Defaults to 10000. See [troubleshooting](#troubleshooting).
-- **:expand**: True or false. By default, if the content width is between 1 and 2 times the width of the container, FilmRoll copies the children on both left and right sides to prevent blanks from appearing. Element ids are mangled so they do not repeat. Setting this to true or false will force this either way. 
-
 
 ###Examples
 View the [project page for working examples](https://straydogstudio.github.io/film_roll).
@@ -135,7 +133,8 @@ Unless you specify no_css, FilmRoll adds the following css to the page header:
    left: auto;
    z-index: auto;
    width: 100%;
-   margin: 0px;
+   margin: 0 !important;
+   padding: 0 !important;
    overflow: hidden;
    width: 100%;
  }
@@ -147,7 +146,8 @@ Unless you specify no_css, FilmRoll adds the following css to the page header:
    left: 0;
    right: auto;
    bottom: auto;
-   margin: 0px;
+   margin: 0 !important;
+   padding: 0 !important;
    z-index: auto;
  }
 .film_roll_prev, .film_roll_next {
@@ -204,16 +204,35 @@ Add it to your own css and disable with `no_css: true` when calling FilmRoll to 
 
 ##Troubleshooting
 
-###Shuttle width
+###Items aren't centering
 
-FilmRoll sets the shuttle (the the div that holds all elements and slides back and forth) to 10000 pixels wide until the page loads. When the page loads, the content is used to determine the appropriate width. If, for some reason, 10000 pixels is not enough, and you get a strange flash on page load, try setting `shuttle_width` higher. 
+If items aren't centering correctly, it is probably because you don't have child div's in side the parent div. For instance, calling FilmRoll on an unordered list has mixed results. Usually the centering will not work. You'll have to strip all normal css styling to get it to work. Usually it is easier to convert it to div > div format. 
+
+If you do have divs inside a parent div, try temporarily giving a border to the child div to see what is going on. The child div may be centered, but its content may not be. 
+
+If you think you have found a bug, report an issue. 
+
+###Images disappear a the front or back
+
+FilmRoll is really designed for content wider than the container. When you get to the end of a list of children, it rotates content ahead of time so there are no blank spaces during the subsequent animation. If your list is just wider than your container, or if your children are very wide compared to the width of the whole, you may see children disappear from one side before they appear on the other. This is expected behavior.
+
+Eventually I will have a fix for this. In the meantime, repeat the children to fill out the list. It will still look like the smaller list rotating, and you will not have 'disappearances.'
+
+###Double rows on start
+
+FilmRoll sets the shuttle (the the div that holds all elements and slides back and forth) to 10000 pixels wide until the page loads. When the page loads, the content is used to determine the appropriate width. If 10000 pixels is not enough for the content you will get two rows of children during page load. Try setting `shuttle_width` to a higher value. 
 
 ##TODO
 
 - Swipe support for mobile
 - Vertical carousels?
 
-## Development
+##Changelog
+
+- **0.1.1:** (8/26/13) Fixes for load/reload mouse issues
+- **0.1.0:** (8/21/13) Initial release
+
+##Development
 
 Fork the project on [github](https://github.com/straydogstudio/film_roll 'straydogstudio / FilmRoll on Github')
 
