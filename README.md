@@ -96,19 +96,19 @@ film_roll_var.configureWidths()
 FilmRoll takes the following markup:
 
 ```html
-  <div id="film_roll">
-    <div class="active">...</div>
-    <div class="active">...</div>
+  <div id="id_or_class_for_selection">
+    <div>...</div>
+    <div>...</div>
   </div>
 ```
 
 and wraps all children with two divs, adds the class `film_roll_child` and a style element to the children, and adds the 'active' class to the centered child:
 
 ```html
-  <div id="film_roll">
+  <div id="id_or_class_for_selection">
     <div class="film_roll_wrapper">
       <div class="film_roll_shuttle">
-        <div class="active film_roll_child" style="position:relative; display:inline-block; vertical-align:middle">…</div>
+        <div class="active film_roll_child">…</div>
         <div class="film_roll_child">…</div>
       </div>
     </div>
