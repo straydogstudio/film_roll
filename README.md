@@ -115,7 +115,7 @@ and wraps all children with two divs, adds the class `film_roll_child` and a sty
   </div>
 ```
 
-Use these classes to apply styling and effects. See the example page.
+Use these classes to apply styling and effects. See the [example page](https://straydogstudio.github.io/film_roll).
 
 ## Default CSS
 
@@ -218,7 +218,7 @@ FilmRoll is really designed for content wider than the container. When you get t
 
 Eventually I will have a fix for this. In the meantime, repeat the children to fill out the list. It will still look like the smaller list rotating, and you will not have 'disappearances.'
 
-###Double rows on start
+###Double rows on start (shuttle width)
 
 FilmRoll sets the shuttle (the the div that holds all elements and slides back and forth) to 10000 pixels wide until the page loads. When the page loads, the content is used to determine the appropriate width. If 10000 pixels is not enough for the content you will get two rows of children during page load. Try setting `shuttle_width` to a higher value. 
 
