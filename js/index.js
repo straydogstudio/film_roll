@@ -4,8 +4,7 @@
     this.film_rolls || (this.film_rolls = []);
     this.film_rolls['film_roll_1'] = new FilmRoll({
       container: '#film_roll_1',
-      height: 560,
-      pager: true
+      height: 560
     });
     this.film_rolls['film_roll_2'] = new FilmRoll({
       container: '#film_roll_2',
