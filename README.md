@@ -117,6 +117,17 @@ and wraps all children with two divs, adds the class `film_roll_child` and a sty
 
 Use these classes to apply styling and effects. See the [example page](https://straydogstudio.github.io/film_roll).
 
+## Callbacks
+
+FilmRoll provides the following callbacks. Unless otherwise noted, all events are triggered on the surrounding container that FilmRoll is initialized with:
+
+- **film_roll:dom_ready**: When html content has been inserted but the page has not been loaded.
+- **film_roll:before_loaded**: When the page has been loaded and **before** FilmRoll has set widths. (Just add an event to window.load to do something after.)
+- **film_roll:deactivate**: When the in place form is deactivated
+- **film_roll:moved**: When the children have been moved.
+- **film_roll:reized**: When the FilmRoll has been resized.
+- **film_roll:activate**: When a child element is activated. Triggered on the child.
+
 ## Default CSS
 
 Unless you specify no_css, FilmRoll adds the following css to the page header:
@@ -229,7 +240,8 @@ FilmRoll sets the shuttle (the the div that holds all elements and slides back a
 
 ##Changelog
 
-- **0.1.1:** (8/26/13) Fixes for load/reload mouse issues
+- **0.1.2:** (8/27/13) Added events
+- **0.1.1:** (8/26/13) Fixes for load/reload mouse issues. Child margins.
 - **0.1.0:** (8/21/13) Initial release
 
 ##Development

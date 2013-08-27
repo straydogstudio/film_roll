@@ -1,6 +1,6 @@
 ###
   FilmRoll (for jQuery)
-  version: 0.1.1 (08/26/2013)
+  version: 0.1.2 (08/27/2013)
   @requires jQuery >= v1.4
 
   By Noel Peden
@@ -21,6 +21,21 @@ class @FilmRoll
         @configure()
 
   configure: ->
+    # create divs for absolute positioning
+    @children = @div.children()
+    @children.wrapAll '<div class="film_roll_wrapper"></div>'
+    @children.wrapAll '<div class="film_roll_shuttle"></div>'
+    @wrapper = @div.find '.film_roll_wrapper'
+    @shuttle = @div.find '.film_roll_shuttle'
+    @rotation = []
+
+    # set height and temporary width
+    shuttle_width = if @options.shuttle_width then parseInt(@options.shuttle_width,10) else 10000
+    @shuttle.width shuttle_width # until the page loads
+    @height = if @options.height then parseInt(@options.height,10) else 0
+    @wrapper.height @height
+    @shuttle.height @height
+
     # add styling
     unless @options.no_css == true or document.film_roll_styles_added
       jQuery("<style type='text/css'>
@@ -36,14 +51,6 @@ class @FilmRoll
         .film_roll_pager span {display:none}
       </style>").appendTo('head')
       document.film_roll_styles_added = true
-
-    # create divs for absolute positioning
-    @children = @div.children()
-    @children.wrapAll '<div class="film_roll_wrapper"></div>'
-    @children.wrapAll '<div class="film_roll_shuttle"></div>'
-    @wrapper = @div.find '.film_roll_wrapper'
-    @shuttle = @div.find '.film_roll_shuttle'
-    @rotation = []
 
     # set up pager
     unless @options.pager is false
@@ -77,13 +84,6 @@ class @FilmRoll
       $el.attr 'data-film-roll-child-id', i
       $el.addClass "film_roll_child"
       @rotation.push e
-
-    # set height and temporary width
-    shuttle_width = if @options.shuttle_width then parseInt(@options.shuttle_width,10) else 10000
-    @shuttle.width shuttle_width # until the page loads
-    @height = if @options.height then parseInt(@options.height,10) else 0
-    @wrapper.height @height
-    @shuttle.height @height
 
     # config left / right buttons
     if @options.prev && @options.next
@@ -122,6 +122,8 @@ class @FilmRoll
         @configureScroll()
         @configureHover()
 
+    @div.trigger jQuery.Event("film_roll:dom_ready")
+
     @
 
   configureHover: =>
@@ -131,6 +133,8 @@ class @FilmRoll
       @next.hover @clearScroll, @configureScroll
 
   configureWidths: =>
+    @div.trigger jQuery.Event("film_roll:before_loaded")
+
     # find children / width / height
     @width = max_el_height = 0
     @children.each (i,e) =>
@@ -197,7 +201,7 @@ class @FilmRoll
     child = @children[index]
     rotation_index = jQuery.inArray child, @rotation
     @children.removeClass 'active'
-    jQuery(child).addClass 'active'
+    jQuery(child).addClass('active').trigger jQuery.Event("film_roll:activate")
     # adjust pager
     @pager_links.removeClass 'active'
     jQuery(@pager_links[index]).addClass 'active'
@@ -219,9 +223,11 @@ class @FilmRoll
           rotation_index = jQuery.inArray child, @rotation
       new_left_margin = -1*(@marginLeft(rotation_index)-visible_margin)
       if animate
-        @shuttle.stop().animate { 'left': new_left_margin }, @animation, 'swing'
+        @shuttle.stop().animate { 'left': new_left_margin }, @animation, 'swing', =>
+          @div.trigger jQuery.Event("film_roll:moved")
       else
         @shuttle.css 'left', new_left_margin
+        @div.trigger jQuery.Event("film_roll:moved")
     else
       @shuttle.css 'left', (wrapper_width - @width)/2
     @
@@ -232,6 +238,7 @@ class @FilmRoll
     @resize_timer = setTimeout =>
       @configureScroll()
       @moveToIndex @index, 'left'
+      @div.trigger jQuery.Event("film_roll:resized")
     , 200
     @
 
