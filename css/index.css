@@ -43,12 +43,12 @@ body {
 #film_roll_2_left {
   position: absolute;
   left: 15px;
-  top: 43%;
+  top: 38%;
 }
 #film_roll_2_right {
   position: absolute;
   right: 15px;
-  top: 43%;
+  top: 38%;
 }
 
 @media (max-width: 979px) {
