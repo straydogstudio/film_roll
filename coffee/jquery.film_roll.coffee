@@ -247,7 +247,7 @@ class @FilmRoll
     _shuttle_left = if _css_left then parseInt(_css_left, 10) else 0
     _first_child = @rotation.shift()
     @rotation.push _first_child
-    @shuttle.css 'left', _shuttle_left + jQuery(_first_child).width()
+    @shuttle.css 'left', _shuttle_left + jQuery(_first_child).outerWidth(true)
     @shuttle.append @shuttle.children().first().detach()
 
   rotateRight: =>
@@ -255,7 +255,7 @@ class @FilmRoll
     _shuttle_left = if _css_left then parseInt(_css_left, 10) else 0
     _last_child = @rotation.pop()
     @rotation.unshift _last_child
-    @shuttle.css 'left', _shuttle_left - jQuery(_last_child).width()
+    @shuttle.css 'left', _shuttle_left - jQuery(_last_child).outerWidth(true)
     @shuttle.prepend @shuttle.children().last().detach()
 
 

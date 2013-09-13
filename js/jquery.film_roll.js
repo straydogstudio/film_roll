@@ -282,7 +282,7 @@
       _shuttle_left = _css_left ? parseInt(_css_left, 10) : 0;
       _first_child = this.rotation.shift();
       this.rotation.push(_first_child);
-      this.shuttle.css('left', _shuttle_left + jQuery(_first_child).width());
+      this.shuttle.css('left', _shuttle_left + jQuery(_first_child).outerWidth(true));
       return this.shuttle.append(this.shuttle.children().first().detach());
     };
 
@@ -292,7 +292,7 @@
       _shuttle_left = _css_left ? parseInt(_css_left, 10) : 0;
       _last_child = this.rotation.pop();
       this.rotation.unshift(_last_child);
-      this.shuttle.css('left', _shuttle_left - jQuery(_last_child).width());
+      this.shuttle.css('left', _shuttle_left - jQuery(_last_child).outerWidth(true));
       return this.shuttle.prepend(this.shuttle.children().last().detach());
     };
 
