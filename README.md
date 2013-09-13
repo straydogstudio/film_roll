@@ -244,6 +244,7 @@ FilmRoll sets the shuttle (the the div that holds all elements and slides back a
 
 ##Changelog
 
+- **0.1.3:** (8/27/13) Always use outerWidth
 - **0.1.2:** (8/27/13) Added events
 - **0.1.1:** (8/26/13) Fixes for load/reload mouse issues. Child margins.
 - **0.1.0:** (8/21/13) Initial release
