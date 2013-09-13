@@ -83,7 +83,7 @@ View the [project page for working examples](https://straydogstudio.github.io/fi
 
 ###On load vs. dom:loaded
 
-FilmRoll is written to be called on dom:ready. It inserts all markup before display and configures itself to resize itself once the content is loaded (after the window.load event.)
+FilmRoll is written to be called on dom:ready. It inserts all markup before display and configures itself to resize itself once the content is loaded (after the window.load event) because it must have content to center an item on the page.
 
 If, for some reason, you need to call FilmRoll on window.load, or create it using an in page script, trigger resize manually:
 
@@ -214,6 +214,10 @@ Unless you specify no_css, FilmRoll adds the following css to the page header:
 Add it to your own css and disable with `no_css: true` when calling FilmRoll to improve performance.
 
 ##Troubleshooting
+
+###Large images or slow loading pages
+
+If you have a heavy set of images, the gallery can look empty while it loads. You can either style the child element to have an appropriate background (e.g. a gradient) while it is waiting, or you can use javascript to load high res pics later. E.g. populate your gallery with placeholder images and use [jQuery Lazyload](https://github.com/tuupola/jquery_lazyload) to load the images after the page loads. 
 
 ###Items aren't centering
 
