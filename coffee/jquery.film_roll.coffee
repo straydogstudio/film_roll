@@ -1,6 +1,6 @@
 ###
   FilmRoll (for jQuery)
-  version: 0.1.3 (09/13/2013)
+  version: 0.1.4 (09/30/2013)
   @requires jQuery >= v1.4
 
   By Noel Peden
@@ -39,8 +39,9 @@ class @FilmRoll
     # add styling
     unless @options.no_css == true or document.film_roll_styles_added
       jQuery("<style type='text/css'>
-        .film_roll_wrapper {display: block; text-align: center; float: none; position: relative; top: auto; right: auto; bottom: auto; left: auto; z-index: auto; width: 100%; margin: 0 !important; padding: 0 !important; overflow: hidden; width: 100%}
-        .film_roll_shuttle {text-align: left; float: none; position: absolute; top: 0; left:0; right: auto; bottom: auto; margin: 0 !important; padding: 0 !important; z-index: auto}
+        .film_roll_wrapper {display: block; text-align: center; float: none; position: relative; top: auto; right: auto; bottom: auto; left: auto; z-index: auto; width: 100%; margin: 0 !important; padding: 0 !important; overflow: hidden;}
+        .film_roll_shuttle {text-align: left; float: none; position: absolute; top: 0; left:0; right: auto; bottom: auto; margin: 0 !important; padding: 0 !important; z-index: auto;}
+        .film_roll_child {position:relative; display:inline-block; *display:inline; vertical-align:middle;}
         .film_roll_prev, .film_roll_next {position:absolute; top:48%; left:15px; width:40px; height:40px; margin:-20px 0 0 0; padding:0; font-size:60px; font-weight:100; line-height:30px; color:white; text-align: center; background: #222; border: 3px solid white; border-radius:23px; opacity:0.5}
         .film_roll_prev:hover, .film_roll_next:hover {color:white; text-decoration:none; opacity:0.9}
         .film_roll_next {left:auto; right:15px}
@@ -80,7 +81,6 @@ class @FilmRoll
     first_child = null
     @children.each (i,e) =>
       $el = jQuery(e)
-      $el.attr 'style', 'position:relative; display:inline-block; vertical-align:middle'
       $el.attr 'data-film-roll-child-id', i
       $el.addClass "film_roll_child"
       @rotation.push e

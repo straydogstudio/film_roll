@@ -244,6 +244,7 @@ FilmRoll sets the shuttle (the the div that holds all elements and slides back a
 
 ##Changelog
 
+- **0.1.4:** (9/30/13) IE7 fix - still doesn't center right
 - **0.1.3:** (9/13/13) Always use outerWidth
 - **0.1.2:** (8/27/13) Added events
 - **0.1.1:** (8/26/13) Fixes for load/reload mouse issues. Child margins.
