@@ -5,7 +5,7 @@
   @requires jQuery >= v1.4
 
   By Noel Peden
-  Examples at http://film_roll.github.io
+  Examples at http://straydogstudio.github.io/film_roll
 
   Licensed under the MIT:
     http://www.opensource.org/licenses/mit-license.php
