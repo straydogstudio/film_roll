@@ -117,6 +117,20 @@ and wraps all children with two divs, adds the class `film_roll_child` and a sty
 
 Use these classes to apply styling and effects. See the [example page](https://straydogstudio.github.io/film_roll).
 
+## Using Javascript
+
+If you wish to move to a specific child using external javascript, use the `moveToIndex` or `moveToChild` functions:
+
+```javascript
+var film_roll = new FilmRoll(...);
+
+$('#some_link_selector').click(function() {
+  film_roll.moveToIndex(3);
+  //or
+  //film_roll.moveToChild($('#some_child_selector'));
+  return false;
+})
+
 ## Callbacks
 
 FilmRoll provides the following callbacks. Unless otherwise noted, all events are triggered on the surrounding container that FilmRoll is initialized with:
@@ -244,6 +258,7 @@ FilmRoll sets the shuttle (the the div that holds all elements and slides back a
 
 ##Changelog
 
+- **0.1.5:** (10/22/13) Fix moveToIndex, add moveToChild, fix non scrolling usage
 - **0.1.4:** (9/30/13) IE7 fix - still doesn't center right
 - **0.1.3:** (9/13/13) Always use outerWidth
 - **0.1.2:** (8/27/13) Added events

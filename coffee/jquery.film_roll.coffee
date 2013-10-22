@@ -1,6 +1,6 @@
 ###
   FilmRoll (for jQuery)
-  version: 0.1.4 (09/30/2013)
+  version: 0.1.5 (10/22/13)
   @requires jQuery >= v1.4
 
   By Noel Peden
@@ -64,9 +64,7 @@ class @FilmRoll
           @index = i
           # here direction only determines which side will be checked
           # for sufficient visible items once the item is slid into view
-          rotation_index = jQuery.inArray @children[i], @rotation
-          direction = if rotation_index < (@children.length/2) then 'right' else 'left'
-          @moveToIndex @index, direction, true
+          @moveToIndex @index, 'best', true
           return false
     @pager_links = @div.find('.film_roll_pager a')
 
@@ -97,10 +95,8 @@ class @FilmRoll
 
     # add events for next prev
     @prev.click =>
-      @clearScroll()
       @moveRight()
     @next.click =>
-      @clearScroll()
       @moveLeft()
 
     # set start index
@@ -125,6 +121,10 @@ class @FilmRoll
     @div.trigger jQuery.Event("film_roll:dom_ready")
 
     @
+
+  bestDirection: (child, rotation_index) ->
+    rotation_index ||= jQuery.inArray child, @rotation
+    if rotation_index < (@children.length/2) then 'right' else 'left'
 
   configureHover: =>
     @div.hover @clearScroll, @configureScroll
@@ -197,9 +197,18 @@ class @FilmRoll
     @moveToIndex @index, 'right', true
     return false
 
+  moveToChild: (element) ->
+    child_index = jQuery.inArray jQuery(element)[0], @children
+    if child_index > -1
+      @moveToIndex child_index
+
   moveToIndex: (index, direction, animate = true) ->
+    @index = index
+    @clearScroll()
     child = @children[index]
     rotation_index = jQuery.inArray child, @rotation
+    if direction == null or direction == 'best'
+      direction = @bestDirection(child, rotation_index)
     @children.removeClass 'active'
     jQuery(child).addClass('active').trigger jQuery.Event("film_roll:activate")
     # adjust pager
@@ -230,13 +239,16 @@ class @FilmRoll
         @div.trigger jQuery.Event("film_roll:moved")
     else
       @shuttle.css 'left', (wrapper_width - @width)/2
+    unless @options.scroll is false
+      @configureScroll()
     @
 
   resize: ->
     @clearScroll()
     clearTimeout @resize_timer
     @resize_timer = setTimeout =>
-      @configureScroll()
+      unless @options.scroll is false
+        @configureScroll()
       @moveToIndex @index, 'left'
       @div.trigger jQuery.Event("film_roll:resized")
     , 200
