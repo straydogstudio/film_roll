@@ -130,6 +130,7 @@ $('#some_link_selector').click(function() {
   //film_roll.moveToChild($('#some_child_selector'));
   return false;
 })
+```
 
 ## Callbacks
 
