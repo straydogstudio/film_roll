@@ -132,6 +132,8 @@ $('#some_link_selector').click(function() {
 })
 ```
 
+Note that `moveToIndex` uses a **zero based index**. E.g. if you have four items, the last item is 3.
+
 ## Callbacks
 
 FilmRoll provides the following callbacks. Unless otherwise noted, all events are triggered on the surrounding container that FilmRoll is initialized with:
