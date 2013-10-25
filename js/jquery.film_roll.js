@@ -134,22 +134,20 @@
     };
 
     FilmRoll.prototype.configureWidths = function() {
-      var max_el_height,
-        _this = this;
+      var _this = this;
       this.div.trigger(jQuery.Event("film_roll:before_loaded"));
-      this.width = max_el_height = 0;
+      this.width = 0;
       this.children.each(function(i, e) {
         var $el, el_height;
         $el = jQuery(e);
         _this.width += $el.outerWidth(true);
-        el_height = $el.outerHeight(true);
-        if (el_height > max_el_height) {
-          return max_el_height = el_height;
+        if (!_this.options.height) {
+          el_height = $el.outerHeight(true);
+          if (el_height > _this.height) {
+            return _this.height = el_height;
+          }
         }
       });
-      if (!this.options.height) {
-        this.height = max_el_height;
-      }
       this.wrapper.height(this.height);
       this.shuttle.height(this.height);
       this.real_width = this.width;
@@ -242,7 +240,7 @@
       this.clearScroll();
       child = this.children[index];
       rotation_index = jQuery.inArray(child, this.rotation);
-      if (direction === null || direction === 'best') {
+      if (!direction || direction === 'best') {
         direction = this.bestDirection(child, rotation_index);
       }
       this.children.removeClass('active');

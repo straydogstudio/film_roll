@@ -136,15 +136,14 @@ class @FilmRoll
     @div.trigger jQuery.Event("film_roll:before_loaded")
 
     # find children / width / height
-    @width = max_el_height = 0
+    @width = 0
     @children.each (i,e) =>
       $el = jQuery(e)
       @width += $el.outerWidth(true)
-      el_height = $el.outerHeight(true)
-      if el_height > max_el_height
-        max_el_height = el_height
-    unless @options.height
-      @height = max_el_height
+      unless @options.height
+        el_height = $el.outerHeight(true)
+        if el_height > @height
+          @height = el_height
 
     # set width and height
     @wrapper.height @height
@@ -207,7 +206,7 @@ class @FilmRoll
     @clearScroll()
     child = @children[index]
     rotation_index = jQuery.inArray child, @rotation
-    if direction == null or direction == 'best'
+    if !direction or direction == 'best'
       direction = @bestDirection(child, rotation_index)
     @children.removeClass 'active'
     jQuery(child).addClass('active').trigger jQuery.Event("film_roll:activate")
