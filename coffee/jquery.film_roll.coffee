@@ -1,6 +1,6 @@
 ###
   FilmRoll (for jQuery)
-  version: 0.1.5 (10/22/13)
+  version: 0.1.6 (10/27/13)
   @requires jQuery >= v1.4
 
   By Noel Peden
@@ -30,27 +30,28 @@ class @FilmRoll
     @rotation = []
 
     # set height and temporary width
-    shuttle_width = if @options.shuttle_width then parseInt(@options.shuttle_width,10) else 10000
-    @shuttle.width shuttle_width # until the page loads
-    @height = if @options.height then parseInt(@options.height,10) else 0
-    @wrapper.height @height
-    @shuttle.height @height
+    @shuttle.width if @options.shuttle_width then parseInt(@options.shuttle_width,10) else 10000
+    if @options.start_height
+      @wrapper.height parseInt(@options.start_height, 10)
 
     # add styling
+    if @options.vertical_center
+      @shuttle.addClass 'vertical_center'
     unless @options.no_css == true or document.film_roll_styles_added
       jQuery("<style type='text/css'>
-.film_roll_wrapper {display: block; text-align: center; float: none; position: relative; top: auto; right: auto; bottom: auto; left: auto; z-index: auto; width: 100%; margin: 0 !important; padding: 0 !important; overflow: hidden;}
-.film_roll_shuttle {text-align: left; float: none; position: absolute; top: 0; left:0; right: auto; bottom: auto; margin: 0 !important; padding: 0 !important; z-index: auto;}
-.film_roll_child {position:relative; display:inline-block; *display:inline; vertical-align:middle; zoom:1;}
-.film_roll_prev, .film_roll_next {position:absolute; top:48%; left:15px; width:40px; height:40px; margin:-20px 0 0 0; padding:0; font-size:60px; font-weight:100; line-height:30px; color:white; text-align: center; background: #222; border: 3px solid white; border-radius:23px; opacity:0.5}
-.film_roll_prev:hover, .film_roll_next:hover {color:white; text-decoration:none; opacity:0.9}
-.film_roll_next {left:auto; right:15px}
-.film_roll_pager {text-align:center}
-.film_roll_pager a {width:5px; height:5px; border:2px solid #333; border-radius:5px; display:inline-block; margin:0 5px 0 0; transition: all 1s ease}
-.film_roll_pager a:hover {background: #666}
-.film_roll_pager a.active {background: #333}
-.film_roll_pager span {display:none}
-      </style>").appendTo('head')
+.film_roll_wrapper{display:block;text-align:center;float:none;position:relative;top:auto;right:auto;bottom:auto;left:auto;z-index:auto;width:100%;height:100%;margin:0 !important;padding:0 !important;overflow:hidden;}
+.film_roll_shuttle{text-align:left;float:none;position:absolute;top:0;left:0;right:auto;bottom:auto;height:100%;margin:0 !important;padding:0 !important;z-index:auto;}
+.film_roll_shuttle.vertical_center:before{content:'';display:inline-block;height:100%;vertical-align:middle;margin-right:-0.25em;}
+.film_roll_child{position:relative;display:inline-block;*display:inline;vertical-align:middle;zoom:1;}
+.film_roll_prev,.film_roll_next{position:absolute;top:48%;left:15px;width:40px;height:40px;margin:-20px 0 0 0;padding:0;font-size:60px;font-weight:100;line-height:30px;color:white;text-align:center;background:#222;border:3px solid white;border-radius:23px;opacity:0.5}
+.film_roll_prev:hover,.film_roll_next:hover{color:white;text-decoration:none;opacity:0.9}
+.film_roll_next{left:auto;right:15px}
+.film_roll_pager{text-align:center;}
+.film_roll_pager a{width:5px;height:5px;border:2px solid #333;border-radius:5px;display:inline-block;margin:0 5px 0 0;transition:all 1s ease}
+.film_roll_pager a:hover{background:#666}
+.film_roll_pager a.active{background:#333}
+.film_roll_pager span{display:none}
+</style>").appendTo('head')
       document.film_roll_styles_added = true
 
     # set up pager
@@ -136,21 +137,22 @@ class @FilmRoll
     @div.trigger jQuery.Event("film_roll:before_loaded")
 
     # find children / width / height
-    @width = 0
+    @width = min_height = 0
     @children.each (i,e) =>
       $el = jQuery(e)
       @width += $el.outerWidth(true)
       unless @options.height
         el_height = $el.outerHeight(true)
-        if el_height > @height
-          @height = el_height
+        if el_height > min_height
+          min_height = el_height
+    if @options.height
+      @wrapper.height @options.height
+    else
+      @wrapper.height ''
+      @wrapper.css 'min-height', min_height
 
-    # set width and height
-    @wrapper.height @height
-    @shuttle.height @height
+    # set width
     @real_width = @width
-
-    # set shuttle width
     @shuttle.width @real_width * 2 # double it to take care of any styling and rotation  
 
     @

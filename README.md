@@ -16,7 +16,10 @@
 - Uses css classes for easy styling / transitions
 - Provides previous / next buttons and pagination automatically
 - Defaults to auto scroll with pause on hover
-- Swipe is not yet available, but will be
+- Supports [full screen usage](https://straydogstudio.github.io/film_roll/fullscreen.html)
+- Yet to be implemented:
+    - Swipe for mobile
+    - Simple external link using classes/ids (For now [see Javascript below](#using-javascript))
 
 ##Usage
 
@@ -50,7 +53,6 @@ Create the FilmRoll instance on dom:ready:
   jQuery(function() {
     film_roll = new FilmRoll({
          container: '#container_id',
-         height: 560,
          prev: '#left_button_id',
          next: '#right_button_id',
        });
@@ -63,29 +65,32 @@ Create the FilmRoll instance on dom:ready:
 Params:
 
 - **:container** (Mandatory): The div that contains all elements that are to be displayed.
-- **:height** (Mandatory - sort of) Set the height of the scroll container. The height of the tallest element by default. You may have flashing problems on load or cover up css effects if you do not set this.
 
 Options:
 
-- **:start_index**: The index of the first element to center
+- **:animation**: The slide animation duration. 1/4 of interval by default. (See **interval** option.)
+- **:height** Set the height of the film_roll wrapper (which sits inside the container.) Options are:
+    - **Not set** (default): The wrapper will be the height of the container (100%), with a min-height of the tallest element.
+    - **Integer/string**: Set the height directly. Can be an integer (pixels) or a string ('75%'.)
+- **:interval**: The automatic scroll interval. 4 seconds by default. To turn off the automatic scroll, see the **scroll** option.
+- **:next**: The jquery selector for the next button. Creates its own button by default. (See **prev** option.)
+- **:no_css**: Do not add [default css](#default-css) to page. You will want to include it otherwise.
 - **:pager**: Display pagination dots at the bottom of the carousel. True by default.
-- **:prev**: The jquery selector for the previous button. Creates its own button by default.
-- **:next**: The jquery selector for the next button. Creates its own button by default.
+- **:prev**: The jquery selector for the previous button. Creates its own button by default. (See **next** option.)
 - **:scroll**: Automatically scroll the carousel. True by default.
-- **:interval**: The automatic scroll interval. 4 seconds by default.
-- **:animation**: The slide animation duration. 1/4 of interval by default.
-- **:no_css**: Do not add [default css](#default-css) to page.
 - **:shuttle_width**: The starting shuttle width until the page loads. Defaults to 10000. See [troubleshooting](#double-rows-on-start-shuttle-width).
+- **:start_height**: A starting height to give the carousel. Use only if you are having content flashes.
+- **:start_index**: The index of the first element to center
+- **:vertical_center**: Center children vertically in the container. Requires a browser with **:before** CSS pseudo class support. This is useful for a full screen carousel.
 
 ###Examples
 View the [project page for working examples](https://straydogstudio.github.io/film_roll).
 
-
 ###On load vs. dom:loaded
 
-FilmRoll is written to be called on dom:ready. It inserts all markup before display and configures itself to resize itself once the content is loaded (after the window.load event) because it must have content to center an item on the page.
+FilmRoll is written to be called on dom:ready. It inserts all markup before display and configures itself to resize itself once the content is loaded (after the window.load event) because **it must have content to center an item on the page**.
 
-If, for some reason, you need to call FilmRoll on window.load, or create it using an in page script, trigger resize manually:
+If, for some reason, you need to call FilmRoll on window.load, or create it using an in page script, trigger the width configuration manually:
 
 ```javascript
 film_roll_var.configureWidths()
@@ -116,6 +121,37 @@ and wraps all children with two divs, adds the class `film_roll_child` and a sty
 ```
 
 Use these classes to apply styling and effects. See the [example page](https://straydogstudio.github.io/film_roll).
+
+### Full Screen usage
+
+To use FilmRoll full screen, do the following:
+
+- Using CSS, configure your container div to be 100% height (and width if necessary):
+
+```css
+#film_roll { height: 100%; }
+```
+
+- Do not pass a height when you instantiate the FilmRoll.
+- To align the children to vertical center, use the vertical_center option:
+
+```javascript
+var film_roll = new FilmRoll({
+    container: '#film_roll',
+    vertical_center: true,
+});
+```
+
+- If you leave the pager enabled, you'll want to bump it back up with CSS:
+
+```css
+.film_roll_pager {
+    position: relative;
+    top: -20px;
+}
+```
+
+See an [example here](https://straydogstudio.github.io/film_roll/fullscreen.html).
 
 ## Using Javascript
 
@@ -178,6 +214,20 @@ Unless you specify no_css, FilmRoll adds the following css to the page header:
    padding: 0 !important;
    z-index: auto;
  }
+ .film_roll_shuttle.vertical_center:before {
+   content: '';
+   display: inline-block;
+   height: 100%;
+   vertical-align: middle;
+   margin-right: -0.25em;
+ }
+.film_roll_child {
+  position: relative;
+  display: inline-block;
+  *display:inline;
+  vertical-align:middle;
+  zoom:1;
+}
 .film_roll_prev, .film_roll_next {
    position: absolute;
    top: 48%;
@@ -257,10 +307,12 @@ FilmRoll sets the shuttle (the the div that holds all elements and slides back a
 ##TODO
 
 - Swipe support for mobile
+- Simple external links
 - Vertical carousels?
 
 ##Changelog
 
+- **0.1.6:** (10/27/13) Full screen support, height no longer required
 - **0.1.5:** (10/22/13) Fix moveToIndex, add moveToChild, fix non scrolling usage
 - **0.1.4:** (9/30/13) IE7 fix - still doesn't center right
 - **0.1.3:** (9/13/13) Always use outerWidth
