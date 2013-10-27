@@ -16,7 +16,7 @@
 - Uses css classes for easy styling / transitions
 - Provides previous / next buttons and pagination automatically
 - Defaults to auto scroll with pause on hover
-- Supports [full screen usage](https://straydogstudio.github.io/film_roll/fullscreen.html)
+- Supports [full screen usage](http://straydogstudio.github.io/film_roll/fullscreen.html)
 - Yet to be implemented:
     - Swipe for mobile
     - Simple external link using classes/ids (For now [see Javascript below](#using-javascript))
@@ -84,7 +84,7 @@ Options:
 - **:vertical_center**: Center children vertically in the container. Requires a browser with **:before** CSS pseudo class support. This is useful for a full screen carousel.
 
 ###Examples
-View the [project page for working examples](https://straydogstudio.github.io/film_roll).
+View the [project page for working examples](http://straydogstudio.github.io/film_roll).
 
 ###On load vs. dom:loaded
 
@@ -120,7 +120,7 @@ and wraps all children with two divs, adds the class `film_roll_child` and a sty
   </div>
 ```
 
-Use these classes to apply styling and effects. See the [example page](https://straydogstudio.github.io/film_roll).
+Use these classes to apply styling and effects. See the [example page](http://straydogstudio.github.io/film_roll).
 
 ### Full Screen usage
 
@@ -151,7 +151,7 @@ var film_roll = new FilmRoll({
 }
 ```
 
-See an [example here](https://straydogstudio.github.io/film_roll/fullscreen.html).
+See an [example here](http://straydogstudio.github.io/film_roll/fullscreen.html).
 
 ## Using Javascript
 
