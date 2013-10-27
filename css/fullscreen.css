@@ -1,8 +1,9 @@
-body {
-    padding-top: 40px;
-    padding-bottom: 40px;
+html, body {
+  height: 100%;
 }
-.hero-unit {
+body {
+  height: 100%;
+  width: 100%;
   text-align: center;
   border-radius: 0;
   margin: 0;
@@ -15,56 +16,72 @@ body {
   background: linear-gradient(to bottom,  #1e5799 0%,#338cd6 59%,#ffffff 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 }
-.hero-unit h1, .hero-unit p.white { color: white; }
-.hero-unit h1 img { vertical-align: bottom; }
-.hero-unit p { margin-top: 30px; }
+
+div#title {
+  background: #1e5799; /* Old browsers */
+  color: white;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 500px;
+  margin-left: -253px;
+  z-index: 500;
+  border-radius: 7px;
+}
+
+div#title a {
+  color: white;
+}
+
+div#title a#more_link {
+  color: yellow;
+}
+
+div#title p a {
+  color: #1e5799;
+  font-weight: bold;
+}
+
+div.padding { padding: 10px; }
+
+div#film_roll {
+  height: 100%;
+}
+
 .film_roll_wrapper img {
   border: 10px solid white;
   box-shadow: 7px 7px 15px #777;
   margin-left: 5px;
   margin-right: 5px;
   transition: all 1s ease;
+  max-width: 100%;
+  height: auto;
+  width: auto\9; /* ie8 */
 }
+
 .film_roll_wrapper .active img {
   border: 10px solid yellow;
 }
-.film_roll_container {
+
+.film_roll_pager {
   position: relative;
-}
-#film_roll_2 .film_roll_shuttle {
-  top:10px;
-}
-#film_roll_2 .film_roll_child {
-  transition: all 1s ease;
-}
-#film_roll_2 .film_roll_child.active {
-  top: -10px;
-}
-#film_roll_2_left {
-  position: absolute;
-  left: 15px;
-  top: 38%;
-}
-#film_roll_2_right {
-  position: absolute;
-  right: 15px;
-  top: 38%;
+  top: -20px;
+  /*z-index: 200;*/
 }
 
-@media (max-width: 979px) {
-  body {
-    padding-top: 0px;
-  }
-  .navbar-fixed-top {
-    margin-bottom: 0;
-  }
+#more {
+  width: 440px;
+  padding: 10px 20px 20px 20px;
+  border-radius: 4px;
+  background: white;
+  color: black;
+  text-align: left;
 }
 
-@media (max-width: 767px) {
-  .hero-unit {
-    margin-left: -20px;
-    margin-right: -20px;
-  }
+#more h2 {
+  text-align: center;
 }
 
-a.yellow { color: yellow; }
+.floatright {
+  float: right;
+}

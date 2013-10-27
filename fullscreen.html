@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title></title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width">
+
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+      <link rel="stylesheet" href="css/fullscreen.css">
+  </head>
+  <body>
+    <div id='title'>
+      <div class="padding">
+        <h1><a href='index.html'><img src="img/film_roll.png"> Film Roll: Full Screen</a></h1>
+        
+        <p><a href='#' id='more_link' class='more_link'>More...</a></p>
+        <div id='more' style="display:none">
+          <h2>Configuration</h2>
+          <p>To configure FilmRoll as a full screen carousel, do the following:
+            <ul>
+              <li>Using CSS, configure your container div to be 100% height (and width if necessary):
+                <pre>#film_roll { height: 100%; }</pre>
+              </li>
+              <li>Do not pass a height when you instantiate the FilmRoll. To align the children to vertical center, use the vertical_center option:
+                <pre>var film_roll = new FilmRoll({
+      container: '#film_roll',
+      vertical_center: true,
+    });</pre>
+              </li>
+              <li>If you leave the pager enabled, you'll want to bump it back up with CSS:
+                <pre>.film_roll_pager {
+      position: relative;
+      top: -20px;
+    }</pre>
+              </li>
+            </ul>
+          </p>
+          <p>
+            <a href='index.html'>Return to FilmRoll</a>
+            <span class='floatright'><a href='#' class='more_link'>Close</a></span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div id='film_roll'>
+      <div><a href='#'><img src="http://placehold.it/530x530"></a></div>
+      <div><a href='#'><img src="http://placehold.it/700x530"></a></div>
+      <div><a href='#'><img src="http://placehold.it/800x530"></a></div>
+      <div><a href='#'><img src="http://placehold.it/800x530"></a></div>
+      <div><a href='#'><img src="http://placehold.it/530x530"></a></div>
+    </div>
+
+    <script src="js/vendor/jquery-1.10.1.min.js"></script>
+    <script src="js/jquery.film_roll.js"></script>
+    <script src="js/fullscreen.js"></script>
+  </body>
+</html>
