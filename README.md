@@ -43,7 +43,7 @@ FilmRoll expects a parent div with children div elements, though it should work 
 	</div>
 ```
 
-Using non `<div>` tags as children is untested, but may work, depending on the tag and styling.
+Using non `<div>` tags as children works fine. The tag used may require (significant) styling to get it to work like a div.
 
 ###Create
 
