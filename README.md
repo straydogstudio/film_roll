@@ -4,7 +4,7 @@
 
 ##Description
 
-**FilmRoll** is a lightweight jQuery carousel that focuses on one item at a time, centering it in the view, regardless of the relative sizes of the carousel items.
+**FilmRoll** is a lightweight jQuery carousel (8.4 kb) that focuses on one item at a time, centering it in the view, regardless of the relative sizes of the carousel items.
 
 [**SEE DEMO**](http://straydogstudio.github.io/film_roll)
 
