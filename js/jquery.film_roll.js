@@ -28,6 +28,7 @@
       this.clearScroll = __bind(this.clearScroll, this);
       this.configureScroll = __bind(this.configureScroll, this);
       this.configureWidths = __bind(this.configureWidths, this);
+      this.configureLoad = __bind(this.configureLoad, this);
       this.configureHover = __bind(this.configureHover, this);
       if (this.options.container) {
         this.div = jQuery(this.options.container);
@@ -106,14 +107,11 @@
       jQuery(window).resize(function() {
         return _this.resize();
       });
-      jQuery(window).load(function() {
-        _this.configureWidths();
-        _this.moveToIndex(_this.index, 'right', true);
-        if (_this.options.scroll !== false) {
-          _this.configureScroll();
-          return _this.configureHover();
-        }
-      });
+      if (this.options.configure_load) {
+        this.configureLoad();
+      } else {
+        jQuery(window).load(this.configureLoad);
+      }
       this.div.trigger(jQuery.Event("film_roll:dom_ready"));
       return this;
     };
@@ -132,6 +130,15 @@
       if (this.options.prev && this.options.next) {
         this.prev.hover(this.clearScroll, this.configureScroll);
         return this.next.hover(this.clearScroll, this.configureScroll);
+      }
+    };
+
+    FilmRoll.prototype.configureLoad = function() {
+      this.configureWidths();
+      this.moveToIndex(this.index, 'right', true);
+      if (this.options.scroll !== false) {
+        this.configureScroll();
+        return this.configureHover();
       }
     };
 

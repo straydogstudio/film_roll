@@ -51,12 +51,21 @@ Create the FilmRoll instance on dom:ready:
 
 ```javascript
   jQuery(function() {
-    film_roll = new FilmRoll({
-         container: '#container_id',
-         prev: '#left_button_id',
-         next: '#right_button_id',
-       });
-  })
+    var film_roll = new FilmRoll({
+        container: '#container_id',
+      });
+  });
+```
+
+If you need to create FilmRoll on page load, use the `configure_load` option:
+
+```javascript
+  jQuery(window).load(function() {
+    var film_roll = new FilmRoll({
+        configure_load: true,
+        container: '#container_id',
+      });
+  });
 ```
 
 ###Configuration
@@ -69,6 +78,7 @@ Params:
 Options:
 
 - **:animation**: The slide animation duration. 1/4 of interval by default. (See **interval** option.)
+- **:configure_load**: Configure width and position and start scrolling immediately (use if instantiating FilmRoll with the page load event. False by default. FilmRoll assumes it is called when the DOM is ready ([jQuery.ready()](http://api.jquery.com/ready/)) and schedules configuration of width and position on page load. 
 - **:height** Set the height of the film_roll wrapper (which sits inside the container.) Options are:
     - **Not set** (default): The wrapper will be the height of the container (100%), with a min-height of the tallest element.
     - **Integer/string**: Set the height directly. Can be an integer (pixels) or a string ('75%'.)
@@ -90,10 +100,13 @@ View the [project page for working examples](http://straydogstudio.github.io/fil
 
 FilmRoll is written to be called on dom:ready. It inserts all markup before display and configures itself to resize itself once the content is loaded (after the window.load event) because **it must have content to center an item on the page**.
 
-If, for some reason, you need to call FilmRoll on window.load, or create it using an in page script, trigger the width configuration manually:
+If, for some reason, you need to call FilmRoll on window.load, or create it using an in page script, pass in the `configure_load: true` option to immediately call the relevant code:
 
 ```javascript
-film_roll_var.configureWidths()
+var film_roll = new FilmRoll({
+    configure_load: true,
+    container: '#container_id',
+  });
 ```
 
 ###Styling

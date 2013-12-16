@@ -112,12 +112,10 @@ class @FilmRoll
       @resize()
 
     # on load config widths, scroll, hover, and start
-    jQuery(window).load =>
-      @configureWidths()
-      @moveToIndex @index, 'right', true
-      unless @options.scroll is false
-        @configureScroll()
-        @configureHover()
+    if @options.configure_load
+      @configureLoad()
+    else
+      jQuery(window).load @configureLoad
 
     @div.trigger jQuery.Event("film_roll:dom_ready")
 
@@ -132,6 +130,13 @@ class @FilmRoll
     if @options.prev && @options.next
       @prev.hover @clearScroll, @configureScroll
       @next.hover @clearScroll, @configureScroll
+
+  configureLoad: =>
+    @configureWidths()
+    @moveToIndex @index, 'right', true
+    unless @options.scroll is false
+      @configureScroll()
+      @configureHover()
 
   configureWidths: =>
     @div.trigger jQuery.Event("film_roll:before_loaded")
