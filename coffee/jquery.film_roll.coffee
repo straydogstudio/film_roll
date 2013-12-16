@@ -208,7 +208,7 @@ class @FilmRoll
     if child_index > -1
       @moveToIndex child_index
 
-  moveToIndex: (index, direction, animate = true) ->
+  moveToIndex: (index, direction, animate = true) =>
     @index = index
     @clearScroll()
     child = @children[index]

@@ -23,6 +23,7 @@
       this.options = options != null ? options : {};
       this.rotateRight = __bind(this.rotateRight, this);
       this.rotateLeft = __bind(this.rotateLeft, this);
+      this.moveToIndex = __bind(this.moveToIndex, this);
       this.moveRight = __bind(this.moveRight, this);
       this.moveLeft = __bind(this.moveLeft, this);
       this.clearScroll = __bind(this.clearScroll, this);
