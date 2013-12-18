@@ -31,7 +31,7 @@
 
 ###Installation
 
-- Download [jquery.film_roll.min.js](https://github.com/straydogstudio/film_roll/releases/tag/0.1.6) and place it in your scripts directory
+- Download [jquery.film_roll.min.js](https://github.com/straydogstudio/film_roll/releases/tag/0.1.7) and place it in your scripts directory
 - Link it in your web page: `<script src="js/jquery.film_roll.js"></script>`
 
 ###Markup
