@@ -1,6 +1,6 @@
 ###
   FilmRoll (for jQuery)
-  version: 0.1.6 (10/27/13)
+  version: 0.1.7 (10/27/13)
   @requires jQuery >= v1.4
 
   By Noel Peden
@@ -51,6 +51,7 @@ class @FilmRoll
 .film_roll_pager a:hover{background:#666}
 .film_roll_pager a.active{background:#333}
 .film_roll_pager span{display:none}
+.film_roll_pager a,a.film_roll_prev,a.film_roll_next{-webkit-box-sizing: content-box;-moz-box-sizing: content-box;box-sizing: content-box;}
 </style>").appendTo('head')
       document.film_roll_styles_added = true
 
@@ -72,7 +73,7 @@ class @FilmRoll
     # detect first mouse movement div
     # some browsers do not set hover if the page loads while the mouse is over the scroll
     @mouse_catcher = jQuery('<div style="position:absolute; top:0; left: 0; height: 100%; width: 100%;" class="film_roll_mouse_catcher"></div>')
-    @mouse_catcher.appendTo(@wrapper).mousemove (event) =>
+    @mouse_catcher.appendTo(@wrapper).mousemove () =>
       @clearScroll()
       @mouse_catcher.remove()
     
@@ -108,8 +109,9 @@ class @FilmRoll
     @animation = @options.animation || @interval/4
 
     # configure window resize event
-    jQuery(window).resize =>
-      @resize()
+    unless @options.resize is false
+      jQuery(window).resize =>
+        @resize()
 
     # on load config widths, scroll, hover, and start
     if @options.configure_load
@@ -143,13 +145,22 @@ class @FilmRoll
 
     # find children / width / height
     @width = min_height = 0
+    # reset for resizing
+    @wrapper.css
+      height: '',
+      'min-height': 0
+    @shuttle.width('').removeClass 'film_roll_shuttle'
+    @children.width ''
     @children.each (i,e) =>
       $el = jQuery(e)
-      @width += $el.outerWidth(true)
+      el_width = $el.outerWidth(true)
+      $el.width el_width
+      @width += el_width
       unless @options.height
         el_height = $el.outerHeight(true)
         if el_height > min_height
           min_height = el_height
+      e
     if @options.height
       @wrapper.height @options.height
     else
@@ -158,7 +169,8 @@ class @FilmRoll
 
     # set width
     @real_width = @width
-    @shuttle.width @real_width * 2 # double it to take care of any styling and rotation  
+    # double the width to take care of any styling and rotation  
+    @shuttle.width(@real_width * 2).addClass 'film_roll_shuttle'
 
     @
 
@@ -238,7 +250,11 @@ class @FilmRoll
           rotation_index = jQuery.inArray child, @rotation
       new_left_margin = -1*(@marginLeft(rotation_index)-visible_margin)
       if animate
+        direction_class = "moving_#{direction}"
+        @shuttle.addClass direction_class
+        @div.trigger jQuery.Event("film_roll:moving")
         @shuttle.stop().animate { 'left': new_left_margin }, @animation, 'swing', =>
+          @shuttle.removeClass direction_class
           @div.trigger jQuery.Event("film_roll:moved")
       else
         @shuttle.css 'left', new_left_margin
@@ -255,6 +271,7 @@ class @FilmRoll
     @resize_timer = setTimeout =>
       unless @options.scroll is false
         @configureScroll()
+      @configureWidths()
       @moveToIndex @index, 'left'
       @div.trigger jQuery.Event("film_roll:resized")
     , 200
@@ -275,5 +292,22 @@ class @FilmRoll
     @rotation.unshift _last_child
     @shuttle.css 'left', _shuttle_left - jQuery(_last_child).outerWidth(true)
     @shuttle.prepend @shuttle.children().last().detach()
+
+  # adapted from https://gist.github.com/jackfuchs/556448
+  # @supportsCSS: (p) ->
+  #   b = document.body || document.documentElement
+  #   s = b.style
+  #   # No css support detected
+  #   if typeof s == 'undefined'
+  #     return false
+  #   # Tests for standard prop
+  #   if typeof s[p] == 'string'
+  #     return true
+  #   # Tests for vendor specific prop
+  #   v = ['Moz', 'Webkit', 'Khtml', 'O', 'ms', 'Icab']
+  #   p = p.charAt(0).toUpperCase() + p.substr(1)
+  #   for num in [0..v.length-1]
+  #     if typeof s[v[i] + p] == 'string'
+  #       return true
 
 

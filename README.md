@@ -21,6 +21,12 @@
     - Swipe for mobile
     - Simple external link using classes/ids (For now [see Javascript below](#using-javascript))
 
+##In The Works
+
+- Examples for:
+    - Responsive images
+    - CSS animtaions (2D and 3D)
+
 ##Usage
 
 ###Installation
@@ -78,7 +84,7 @@ Params:
 Options:
 
 - **:animation**: The slide animation duration. 1/4 of interval by default. (See **interval** option.)
-- **:configure_load**: Configure width and position and start scrolling immediately (use if instantiating FilmRoll with the page load event. False by default. FilmRoll assumes it is called when the DOM is ready ([jQuery.ready()](http://api.jquery.com/ready/)) and schedules configuration of width and position on page load. 
+- **:configure_load**: Configure width and position and start scrolling immediately (use if instantiating FilmRoll with the page load event.) False by default. Without this option FilmRoll assumes it is called when the DOM is ready ([jQuery.ready()](http://api.jquery.com/ready/)) and schedules configuration of width and position on page load. 
 - **:height** Set the height of the film_roll wrapper (which sits inside the container.) Options are:
     - **Not set** (default): The wrapper will be the height of the container (100%), with a min-height of the tallest element.
     - **Integer/string**: Set the height directly. Can be an integer (pixels) or a string ('75%'.)
@@ -87,6 +93,7 @@ Options:
 - **:no_css**: Do not add [default css](#default-css) to page. You will want to include it otherwise.
 - **:pager**: Display pagination dots at the bottom of the carousel. True by default.
 - **:prev**: The jquery selector for the previous button. Creates its own button by default. (See **next** option.)
+- **:resize**: Re-center the carousel on window resize. True by default. Set to false to perform your own logic before calling `film_roll_variable.resize();`.
 - **:scroll**: Automatically scroll the carousel. True by default.
 - **:shuttle_width**: The starting shuttle width until the page loads. Defaults to 10000. See [troubleshooting](#double-rows-on-start-shuttle-width).
 - **:start_height**: A starting height to give the carousel. Use only if you are having content flashes.
@@ -189,9 +196,9 @@ FilmRoll provides the following callbacks. Unless otherwise noted, all events ar
 
 - **film_roll:dom_ready**: When html content has been inserted but the page has not been loaded.
 - **film_roll:before_loaded**: When the page has been loaded and **before** FilmRoll has set widths. (Just add an event to window.load to do something after.)
-- **film_roll:deactivate**: When the in place form is deactivated
-- **film_roll:moved**: When the children have been moved.
-- **film_roll:reized**: When the FilmRoll has been resized.
+- **film_roll:moving**: When shuttle animation begins.
+- **film_roll:moved**: When shuttle animation has finished.
+- **film_roll:resized**: When the FilmRoll has been resized.
 - **film_roll:activate**: When a child element is activated. Triggered on the child.
 
 ## Default CSS
@@ -289,6 +296,11 @@ Unless you specify no_css, FilmRoll adds the following css to the page header:
 .film_roll_pager span {
    display: none;
  }
+ .film_roll_pager a, a.film_roll_prev, a.film_roll_next {
+   -webkit-box-sizing: content-box;
+   -moz-box-sizing: content-box;
+   box-sizing: content-box;
+ }
 ```
 
 Add it to your own css and disable with `no_css: true` when calling FilmRoll to improve performance.
@@ -325,6 +337,7 @@ FilmRoll sets the shuttle (the the div that holds all elements and slides back a
 
 ##Changelog
 
+- **0.1.7:** (10/27/13) Full height screen support, better events, classes for CSS animations
 - **0.1.6:** (10/27/13) Full screen support, height no longer required
 - **0.1.5:** (10/22/13) Fix moveToIndex, add moveToChild, fix non scrolling usage
 - **0.1.4:** (9/30/13) IE7 fix - still doesn't center right
