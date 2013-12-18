@@ -21,43 +21,32 @@
         <h1><a href='index.html'><img src="img/film_roll.png"> Film Roll: Full Screen</a></h1>
 
         <p class='nav'>
-        Full Height |
-        <a href='fullscreen_vertically_centered.html'>Vertically Centered</a>
+        <a href='fullscreen.html'>Full Height</a> |
+        <a href='fullscreen_vertically_centered.html'>Vertically Centered</a> |
+        Responsive Images
         </p>
-
+        
         <p><a href='#' id='more_link' class='more_link'>How To...</a></p>
         <div id='more' style="display:none">
           <h2>Configuration</h2>
-          <p>To configure FilmRoll as a full screen carousel where content fills the height of the browser, do the following:
+          <p>There are many ways to implement responsive images. Here I demonstrate the use of <a href='https://github.com/scottjehl/picturefill'>picturefill.js</a> with FilmRoll to create a full screen carousel. Do the following:
             <ul>
-              <li>Using CSS, use the following sytling:
-<pre>
-#film_roll, div.film_roll_child {
-  height: 100%;
-}
-div.film_roll_child img {
-  height: 100%;
-  max-width: none;
-  max-height: 100%;
-}
-div.film_roll_wrapper { overflow-x: hidden; }
-</pre>
-                This code assumes you have images inside child divs.
-              </li>
-              <li>If you place borders or shadows on the child, you will have better success if you turn on box-sizing:
-<pre>
-div.film_roll_children {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-</pre>
-              <li>Do not pass a height when you instantiate the FilmRoll:
+              <li>See the <a href='fullscreen.html'>full screen page</a> for full screen images.
+              <li>In each child, implement the picturefill span to specify your images (see <a href='https://github.com/scottjehl/picturefill'>picturefill.js</a> for more information):
+                <pre>&lt;div&gt;
+ &lt;span data-picture data-alt="Three bears"&gt;
+  &lt;span data-src="small.jpg"&gt;&lt;/span&gt;
+  &lt;span data-src="medium.jpg" data-media="(min-width: 400px)"&gt;&lt;/span&gt;
+  &lt;span data-src="large.jpg" data-media="(min-width: 800px)"&gt;&lt;/span&gt;
+ &lt;/span&gt;
+&lt;/div&gt;</pre>
+              <li>When you instantiate the FilmRoll tell it not to resize:
                 <pre>var film_roll = new FilmRoll({
       container: '#film_roll',
+      resize: false,
     });</pre>
               </li>
-              <li>If you leave the pager enabled, you'll want to bump it back up with CSS:
+              <li>Resize the carousel when picturefill has responded to resize:
                 <pre>.film_roll_pager {
       position: relative;
       top: -20px;

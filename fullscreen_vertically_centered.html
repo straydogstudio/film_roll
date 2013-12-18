@@ -13,7 +13,6 @@
       <link rel="stylesheet" href="css/bootstrap.min.css">
       <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
       <link rel="stylesheet" href="css/fullscreen.css">
-      <link rel="stylesheet" href="css/fullscreen_full_height.css">
   </head>
   <body>
     <div id='title'>
@@ -21,40 +20,22 @@
         <h1><a href='index.html'><img src="img/film_roll.png"> Film Roll: Full Screen</a></h1>
 
         <p class='nav'>
-        Full Height |
-        <a href='fullscreen_vertically_centered.html'>Vertically Centered</a>
+          <a href='fullscreen.html'>Full Height</a> |
+          Vertically Centered
         </p>
-
+        
         <p><a href='#' id='more_link' class='more_link'>How To...</a></p>
         <div id='more' style="display:none">
           <h2>Configuration</h2>
-          <p>To configure FilmRoll as a full screen carousel where content fills the height of the browser, do the following:
+          <p>To configure FilmRoll as a vertically centered full screen carousel, do the following:
             <ul>
-              <li>Using CSS, use the following sytling:
-<pre>
-#film_roll, div.film_roll_child {
-  height: 100%;
-}
-div.film_roll_child img {
-  height: 100%;
-  max-width: none;
-  max-height: 100%;
-}
-div.film_roll_wrapper { overflow-x: hidden; }
-</pre>
-                This code assumes you have images inside child divs.
+              <li>Using CSS, configure your container div to be 100% height (and width if necessary):
+                <pre>#film_roll { height: 100%; }</pre>
               </li>
-              <li>If you place borders or shadows on the child, you will have better success if you turn on box-sizing:
-<pre>
-div.film_roll_children {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-</pre>
-              <li>Do not pass a height when you instantiate the FilmRoll:
+              <li>Do not pass a height when you instantiate the FilmRoll. To align the children to vertical center, use the vertical_center option:
                 <pre>var film_roll = new FilmRoll({
       container: '#film_roll',
+      vertical_center: true,
     });</pre>
               </li>
               <li>If you leave the pager enabled, you'll want to bump it back up with CSS:
@@ -73,18 +54,15 @@ div.film_roll_children {
       </div>
     </div>
     <div id='film_roll'>
-      <div class='film_roll_child'><a href='#'><img src="http://placehold.it/900x1080"></a></div>
-      <div class='film_roll_child'><a href='#'><img src="http://placehold.it/1400x1080"></a></div>
-      <div class='film_roll_child'><a href='#'><img src="http://placehold.it/1300x1080"></a></div>
-      <div class='film_roll_child'><a href='#'><img src="http://placehold.it/530x1080"></a></div>
-    </div>
-    <div style='display:none'>
-      <div><a href='#'><img src="http://placehold.it/800x1080"></a></div>
-      <div><a href='#'><img src="http://placehold.it/1200x1080"></a></div>
+      <div><a href='#'><img src="http://placehold.it/530x530"></a></div>
+      <div><a href='#'><img src="http://placehold.it/700x530"></a></div>
+      <div><a href='#'><img src="http://placehold.it/800x530"></a></div>
+      <div><a href='#'><img src="http://placehold.it/800x530"></a></div>
+      <div><a href='#'><img src="http://placehold.it/530x530"></a></div>
     </div>
 
     <script src="js/vendor/jquery-1.10.1.min.js"></script>
     <script src="js/jquery.film_roll.js"></script>
-    <script src="js/fullscreen_full_height.js"></script>
+    <script src="js/fullscreen_vertically_centered.js"></script>
   </body>
 </html>

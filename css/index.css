@@ -1,3 +1,8 @@
+*,:before,:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
 body {
     padding-top: 40px;
     padding-bottom: 40px;
@@ -23,7 +28,7 @@ body {
   box-shadow: 7px 7px 15px #777;
   margin-left: 5px;
   margin-right: 5px;
-  transition: all 1s ease;
+  /*transition: all 1s ease;*/
 }
 .film_roll_wrapper .active img {
   border: 10px solid yellow;
@@ -31,11 +36,28 @@ body {
 .film_roll_container {
   position: relative;
 }
+.film_roll_pager a, a.film_roll_prev, a.film_roll_next {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
 #film_roll_2 .film_roll_shuttle {
   top:10px;
 }
 #film_roll_2 .film_roll_child {
+  -webkit-transition: all 1s ease;
   transition: all 1s ease;
+  top: 0;
+}
+#film_roll_2 .moving_right .film_roll_child {
+  transform: skew(2deg, 0) translate(-3px,0);
+  -ms-transform: skew(2deg, 0) translate(-3px,0);
+  -webkit-transform: skew(2deg, 0) translate(-3px,0);
+}
+#film_roll_2 .moving_left .film_roll_child {
+  transform: skew(-2deg, 0) translate(3px,0);
+  -ms-transform: skew(-2deg, 0) translate(3px,0);
+  -webkit-transform: skew(-2deg, 0) translate(3px,0);
 }
 #film_roll_2 .film_roll_child.active {
   top: -10px;

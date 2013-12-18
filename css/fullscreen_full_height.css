@@ -1,0 +1,12 @@
+
+div.film_roll_child {
+  height: 100%;
+}
+div.film_roll_child img {
+  height: 100%;
+  max-width: none;
+  max-height: 100%;
+}
+div.film_roll_wrapper {
+  overflow-x: hidden;
+}

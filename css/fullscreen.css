@@ -17,6 +17,12 @@ body {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 }
 
+*,:before,:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 div#title {
   background: #1e5799; /* Old browsers */
   color: white;
@@ -29,17 +35,29 @@ div#title {
   border-radius: 7px;
 }
 
-div#title a {
+div#title h1 a {
   color: white;
 }
 
-div#title a#more_link {
-  color: yellow;
+p.nav {
+  font-weight: bold;
 }
 
 div#title p a {
-  color: #1e5799;
+  color: yellow;
   font-weight: bold;
+}
+
+#more {
+  box-sizing: content-box;
+}
+
+div#title #more a {
+  color: #1e5799;
+}
+
+#more p:last-child {
+  margin: 15px 0 0 0;
 }
 
 div.padding { padding: 10px; }
@@ -55,7 +73,7 @@ div#film_roll {
   margin-right: 5px;
   transition: all 1s ease;
   max-width: 100%;
-  height: auto;
+  height: 100%;
   width: auto\9; /* ie8 */
 }
 
@@ -66,7 +84,12 @@ div#film_roll {
 .film_roll_pager {
   position: relative;
   top: -20px;
-  /*z-index: 200;*/
+}
+
+.film_roll_pager a, a.film_roll_prev, a.film_roll_next {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
 }
 
 #more {
