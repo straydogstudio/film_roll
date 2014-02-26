@@ -23,6 +23,7 @@
       this.options = options != null ? options : {};
       this.rotateRight = __bind(this.rotateRight, this);
       this.rotateLeft = __bind(this.rotateLeft, this);
+      this.resize = __bind(this.resize, this);
       this.moveRight = __bind(this.moveRight, this);
       this.moveLeft = __bind(this.moveLeft, this);
       this.clearScroll = __bind(this.clearScroll, this);
@@ -74,13 +75,40 @@
         })(this));
       }
       this.pager_links = this.div.find('.film_roll_pager a');
-      this.mouse_catcher = jQuery('<div style="position:absolute; top:0; left: 0; height: 100%; width: 100%;" class="film_roll_mouse_catcher"></div>');
-      this.mouse_catcher.appendTo(this.wrapper).mousemove((function(_this) {
-        return function() {
-          _this.clearScroll();
-          return _this.mouse_catcher.remove();
-        };
-      })(this));
+      if (this.options.hover === 'scroll') {
+        this.options.scroll = false;
+        this.hover_in = (function(_this) {
+          return function() {
+            clearTimeout(_this.hover_timer);
+            return _this.hover_timer = setTimeout(function() {
+              _this.moveLeft();
+              return _this.configureScroll();
+            }, 300);
+          };
+        })(this);
+        this.hover_out = this.clearScroll;
+      } else {
+        if (this.options.hover !== false) {
+          this.hover_in = (function(_this) {
+            return function() {
+              clearTimeout(_this.hover_timer);
+              return _this.hover_timer = setTimeout(function() {
+                return _this.clearScroll();
+              }, 300);
+            };
+          })(this);
+          this.hover_out = this.configureScroll;
+        }
+      }
+      if (this.options.hover !== false) {
+        this.mouse_catcher = jQuery('<div style="position:absolute; top:0; left: 0; height: 100%; width: 100%;" class="film_roll_mouse_catcher"></div>');
+        this.mouse_catcher.appendTo(this.wrapper).mousemove((function(_this) {
+          return function() {
+            _this.hover_in();
+            return _this.mouse_catcher.remove();
+          };
+        })(this));
+      }
       first_child = null;
       this.children.each((function(_this) {
         return function(i, e) {
@@ -144,17 +172,20 @@
     };
 
     FilmRoll.prototype.configureHover = function() {
-      this.div.hover(this.clearScroll, this.configureScroll);
+      this.div.hover(this.hover_in, this.hover_out);
       if (this.options.prev && this.options.next) {
-        this.prev.hover(this.clearScroll, this.configureScroll);
-        return this.next.hover(this.clearScroll, this.configureScroll);
+        this.prev.hover(this.hover_in, this.hover_out);
+        return this.next.hover(this.hover_in, this.hover_out);
       }
     };
 
     FilmRoll.prototype.configureLoad = function() {
       this.configureWidths();
       this.moveToIndex(this.index, 'right', true);
-      if (this.options.scroll !== false) {
+      if (this.options.hover === 'scroll') {
+        this.options.scroll = false;
+        return this.configureHover();
+      } else if (this.options.scroll !== false) {
         this.configureScroll();
         if (this.options.hover !== false) {
           return this.configureHover();
@@ -276,11 +307,12 @@
     };
 
     FilmRoll.prototype.moveToIndex = function(index, direction, animate) {
-      var child, direction_class, new_left_margin, rotation_index, visible_margin, wrapper_width;
+      var child, direction_class, new_left_margin, rotation_index, scrolled, visible_margin, wrapper_width;
       if (animate == null) {
         animate = true;
       }
       this.index = index;
+      scrolled = this.scrolled;
       this.clearScroll();
       child = this.children[index];
       rotation_index = jQuery.inArray(child, this.rotation);
@@ -325,18 +357,20 @@
       } else {
         this.shuttle.css('left', (wrapper_width - this.width) / 2);
       }
-      if (this.options.scroll !== false) {
+      if (scrolled) {
         this.configureScroll();
       }
       return this;
     };
 
     FilmRoll.prototype.resize = function() {
-      this.clearScroll();
       clearTimeout(this.resize_timer);
       this.resize_timer = setTimeout((function(_this) {
         return function() {
-          if (_this.options.scroll !== false) {
+          var scrolled;
+          scrolled = _this.scrolled;
+          _this.clearScroll();
+          if (scrolled) {
             _this.configureScroll();
           }
           _this.configureWidths();

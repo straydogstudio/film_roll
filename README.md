@@ -91,7 +91,7 @@ Options:
 - **:height**: Set the height of the film_roll wrapper (which sits inside the container.) Options are:
     - **Not set** (default): The wrapper will be the height of the container (100%), with a min-height of the tallest element.
     - **Integer/string**: Set the height directly. Can be an integer (pixels) or a string ('75%'.)
-- **:hover**: Pause scroll on hover. True by default.
+- **:hover**: If true, pause scroll on hover. If false, ignore hover. If 'scroll', scroll the carousel on hover. True by default.
 - **:interval**: The automatic scroll interval. 4 seconds by default. To turn off the automatic scroll, see the **scroll** option.
 - **:next**: The jquery selector for the next button. Creates its own button by default. (See **prev** option.)
 - **:no_css**: Do not add [default css](#default-css) to page. You will want to include it otherwise.

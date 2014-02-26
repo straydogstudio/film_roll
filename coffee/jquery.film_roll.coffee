@@ -70,13 +70,33 @@ class @FilmRoll
           return false
     @pager_links = @div.find('.film_roll_pager a')
 
+    # hover events
+    if @options.hover == 'scroll'
+      @options.scroll = false
+      @hover_in  = =>
+        clearTimeout @hover_timer
+        @hover_timer = setTimeout =>
+          @moveLeft()
+          @configureScroll()
+        , 300
+      @hover_out = @clearScroll
+    else
+      unless @options.hover == false
+        @hover_in  = =>
+          clearTimeout @hover_timer
+          @hover_timer = setTimeout =>
+            @clearScroll()
+          , 300
+        @hover_out = @configureScroll
+
     # detect first mouse movement div
     # some browsers do not set hover if the page loads while the mouse is over the scroll
-    @mouse_catcher = jQuery('<div style="position:absolute; top:0; left: 0; height: 100%; width: 100%;" class="film_roll_mouse_catcher"></div>')
-    @mouse_catcher.appendTo(@wrapper).mousemove () =>
-      @clearScroll()
-      @mouse_catcher.remove()
-    
+    unless @options.hover is false
+      @mouse_catcher = jQuery('<div style="position:absolute; top:0; left: 0; height: 100%; width: 100%;" class="film_roll_mouse_catcher"></div>')
+      @mouse_catcher.appendTo(@wrapper).mousemove () =>
+        @hover_in()
+        @mouse_catcher.remove()
+      
     # set classes and get rotation
     first_child = null
     @children.each (i,e) =>
@@ -104,7 +124,7 @@ class @FilmRoll
     # set start index
     @index = @options.start_index || 0
 
-    # scroll timer variables
+    # scroll variables
     @interval = @options.interval || 4000
     @animation = @options.animation || @interval/4
     @easing = @options.easing || 'swing'
@@ -132,15 +152,18 @@ class @FilmRoll
     if rotation_index < (@children.length/2) then 'right' else 'left'
 
   configureHover: =>
-    @div.hover @clearScroll, @configureScroll
+    @div.hover @hover_in, @hover_out
     if @options.prev && @options.next
-      @prev.hover @clearScroll, @configureScroll
-      @next.hover @clearScroll, @configureScroll
+      @prev.hover @hover_in, @hover_out
+      @next.hover @hover_in, @hover_out
 
   configureLoad: =>
     @configureWidths()
     @moveToIndex @index, 'right', true
-    unless @options.scroll is false
+    if @options.hover == 'scroll'
+      @options.scroll = false
+      @configureHover()
+    else if @options.scroll != false
       @configureScroll()
       unless @options.hover is false
         @configureHover()
@@ -173,7 +196,7 @@ class @FilmRoll
 
     # set width
     @real_width = @width
-    # double the width to take care of any styling and rotation  
+    # double the width to take care of any styling and rotation
     @shuttle.width(@real_width * 2).removeClass('film_roll_resizing').addClass 'film_roll_shuttle'
 
     @
@@ -226,6 +249,7 @@ class @FilmRoll
 
   moveToIndex: (index, direction, animate = true) ->
     @index = index
+    scrolled = @scrolled
     @clearScroll()
     child = @children[index]
     rotation_index = jQuery.inArray child, @rotation
@@ -265,15 +289,16 @@ class @FilmRoll
         @div.trigger jQuery.Event("film_roll:moved")
     else
       @shuttle.css 'left', (wrapper_width - @width)/2
-    unless @options.scroll is false
+    if scrolled
       @configureScroll()
     @
 
-  resize: ->
-    @clearScroll()
+  resize: =>
     clearTimeout @resize_timer
     @resize_timer = setTimeout =>
-      unless @options.scroll is false
+      scrolled = @scrolled
+      @clearScroll()
+      if scrolled
         @configureScroll()
       @configureWidths()
       @moveToIndex @index, 'best'
