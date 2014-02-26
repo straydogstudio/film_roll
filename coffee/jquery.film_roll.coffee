@@ -1,6 +1,6 @@
 ###
   FilmRoll (for jQuery)
-  version: 0.1.7 (10/27/13)
+  version: 0.1.8 (2/25/14)
   @requires jQuery >= v1.4
 
   By Noel Peden
@@ -40,7 +40,7 @@ class @FilmRoll
     unless @options.no_css == true or document.film_roll_styles_added
       jQuery("<style type='text/css'>
 .film_roll_wrapper{display:block;text-align:center;float:none;position:relative;top:auto;right:auto;bottom:auto;left:auto;z-index:auto;width:100%;height:100%;margin:0 !important;padding:0 !important;overflow:hidden;}
-.film_roll_shuttle{text-align:left;float:none;position:absolute;top:0;left:0;right:auto;bottom:auto;height:100%;margin:0 !important;padding:0 !important;z-index:auto;}
+.film_roll_shuttle{text-align:left;float:none;position:relative;top:0;left:0;right:auto;bottom:auto;height:100%;margin:0 !important;padding:0 !important;z-index:auto;}
 .film_roll_shuttle.vertical_center:before{content:'';display:inline-block;height:100%;vertical-align:middle;margin-right:-0.25em;}
 .film_roll_child{position:relative;display:inline-block;*display:inline;vertical-align:middle;zoom:1;}
 .film_roll_prev,.film_roll_next{position:absolute;top:48%;left:15px;width:40px;height:40px;margin:-20px 0 0 0;padding:0;font-size:60px;font-weight:100;line-height:30px;color:white;text-align:center;background:#222;border:3px solid white;border-radius:23px;opacity:0.5}
@@ -107,15 +107,19 @@ class @FilmRoll
     # scroll timer variables
     @interval = @options.interval || 4000
     @animation = @options.animation || @interval/4
+    @easing = @options.easing || 'swing'
 
     # configure window resize event
     unless @options.resize is false
       jQuery(window).resize =>
         @resize()
 
-    # on load config widths, scroll, hover, and start
+    # on load configure widths, scroll, hover, and start
     if @options.configure_load
-      @configureLoad()
+      if typeof(@options.configure_load) == 'function'
+        @options.configure_load.apply @, arguments
+      else
+        @configureLoad();
     else
       jQuery(window).load @configureLoad
 
@@ -138,19 +142,19 @@ class @FilmRoll
     @moveToIndex @index, 'right', true
     unless @options.scroll is false
       @configureScroll()
-      @configureHover()
+      unless @options.hover is false
+        @configureHover()
 
   configureWidths: =>
-    @div.trigger jQuery.Event("film_roll:before_loaded")
-
     # find children / width / height
     @width = min_height = 0
     # reset for resizing
     @wrapper.css
       height: '',
       'min-height': 0
-    @shuttle.width('').removeClass 'film_roll_shuttle'
+    @shuttle.width('').removeClass('film_roll_shuttle').addClass 'film_roll_resizing'
     @children.width ''
+    @div.trigger jQuery.Event("film_roll:resizing")
     @children.each (i,e) =>
       $el = jQuery(e)
       el_width = $el.outerWidth(true)
@@ -170,7 +174,7 @@ class @FilmRoll
     # set width
     @real_width = @width
     # double the width to take care of any styling and rotation  
-    @shuttle.width(@real_width * 2).addClass 'film_roll_shuttle'
+    @shuttle.width(@real_width * 2).removeClass('film_roll_resizing').addClass 'film_roll_shuttle'
 
     @
 
@@ -253,7 +257,7 @@ class @FilmRoll
         direction_class = "moving_#{direction}"
         @shuttle.addClass direction_class
         @div.trigger jQuery.Event("film_roll:moving")
-        @shuttle.stop().animate { 'left': new_left_margin }, @animation, 'swing', =>
+        @shuttle.stop().animate { 'left': new_left_margin }, @animation, @easing, =>
           @shuttle.removeClass direction_class
           @div.trigger jQuery.Event("film_roll:moved")
       else
@@ -272,7 +276,7 @@ class @FilmRoll
       unless @options.scroll is false
         @configureScroll()
       @configureWidths()
-      @moveToIndex @index, 'left'
+      @moveToIndex @index, 'best'
       @div.trigger jQuery.Event("film_roll:resized")
     , 200
     @

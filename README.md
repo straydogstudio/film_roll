@@ -26,12 +26,14 @@
 - Examples for:
     - Responsive images
     - CSS animtaions (2D and 3D)
+- Swipe support for mobile
+- Simple external links
 
 ##Usage
 
 ###Installation
 
-- Download [jquery.film_roll.min.js](https://github.com/straydogstudio/film_roll/releases/tag/0.1.7) and place it in your scripts directory
+- Download [jquery.film_roll.min.js](https://github.com/straydogstudio/film_roll/releases) and place it in your scripts directory
 - Link it in your web page: `<script src="js/jquery.film_roll.js"></script>`
 
 ###Markup
@@ -84,10 +86,12 @@ Params:
 Options:
 
 - **:animation**: The slide animation duration. 1/4 of interval by default. (See **interval** option.)
-- **:configure_load**: Configure width and position and start scrolling immediately (use if instantiating FilmRoll with the page load event.) False by default. Without this option FilmRoll assumes it is called when the DOM is ready ([jQuery.ready()](http://api.jquery.com/ready/)) and schedules configuration of width and position on page load. 
-- **:height** Set the height of the film_roll wrapper (which sits inside the container.) Options are:
+- **:configure_load**: If true, configure widths immediately (use if instantiating FilmRoll with the page load event.) If false, configure width on the window load event. If a function, immediately call the function. False by default. Without this option FilmRoll assumes it has been instantiated on DOM ready ([jQuery.ready()](http://api.jquery.com/ready/)) and it will schedule its width configuration to run on page load. 
+- **:easing**: `swing` by default. jQuery also provides `linear`. [jQueryUI](http://api.jqueryui.com/easings/) provides more.
+- **:height**: Set the height of the film_roll wrapper (which sits inside the container.) Options are:
     - **Not set** (default): The wrapper will be the height of the container (100%), with a min-height of the tallest element.
     - **Integer/string**: Set the height directly. Can be an integer (pixels) or a string ('75%'.)
+- **:hover**: Pause scroll on hover. True by default.
 - **:interval**: The automatic scroll interval. 4 seconds by default. To turn off the automatic scroll, see the **scroll** option.
 - **:next**: The jquery selector for the next button. Creates its own button by default. (See **prev** option.)
 - **:no_css**: Do not add [default css](#default-css) to page. You will want to include it otherwise.
@@ -133,7 +137,7 @@ and wraps all children with two divs, adds the class `film_roll_child` and a sty
   <div id="id_or_class_for_selection">
     <div class="film_roll_wrapper">
       <div class="film_roll_shuttle">
-        <div class="active film_roll_child">…</div>
+        <div class="film_roll_child active">…</div>
         <div class="film_roll_child">…</div>
       </div>
     </div>
@@ -195,9 +199,9 @@ Note that `moveToIndex` uses a **zero based index**. E.g. if you have four items
 FilmRoll provides the following callbacks. Unless otherwise noted, all events are triggered on the surrounding container that FilmRoll is initialized with:
 
 - **film_roll:dom_ready**: When html content has been inserted but the page has not been loaded.
-- **film_roll:before_loaded**: When the page has been loaded and **before** FilmRoll has set widths. (Just add an event to window.load to do something after.)
 - **film_roll:moving**: When shuttle animation begins.
 - **film_roll:moved**: When shuttle animation has finished.
+- **film_roll:resizing**: Before FilmRoll measures the size of all content. The shuttle div is given the class `film_roll_resizing` during measurement. Called when the page has been loaded *and* when the page resizes. 
 - **film_roll:resized**: When the FilmRoll has been resized.
 - **film_roll:activate**: When a child element is activated. Triggered on the child.
 
@@ -225,7 +229,7 @@ Unless you specify no_css, FilmRoll adds the following css to the page header:
 .film_roll_shuttle {
    text-align: left;
    float: none;
-   position: absolute;
+   position: relative;
    top: 0;
    left: 0;
    right: auto;
@@ -329,14 +333,9 @@ Eventually I will have a fix for this. In the meantime, repeat the children to f
 
 FilmRoll sets the shuttle (the the div that holds all elements and slides back and forth) to 10000 pixels wide until the page loads. When the page loads, the content is used to determine the appropriate width. If 10000 pixels is not enough for the content you will get two rows of children during page load. Try setting `shuttle_width` to a higher value. 
 
-##TODO
-
-- Swipe support for mobile
-- Simple external links
-- Vertical carousels?
-
 ##Changelog
 
+- **0.1.8:** (2/25/14) Options for hover, easing, and configure_load function
 - **0.1.7:** (10/27/13) Full height screen support, better events, classes for CSS animations
 - **0.1.6:** (10/27/13) Full screen support, height no longer required
 - **0.1.5:** (10/22/13) Fix moveToIndex, add moveToChild, fix non scrolling usage
