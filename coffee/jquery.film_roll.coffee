@@ -137,15 +137,15 @@ class @FilmRoll
     # on load configure widths, scroll, hover, and start
     if @options.configure_load
       if typeof(@options.configure_load) == 'function'
-        @options.configure_load.apply @, arguments
+        @options.configure_load.apply this, arguments
       else
-        @configureLoad();
+        @configureLoad()
     else
       jQuery(window).load @configureLoad
 
     @div.trigger jQuery.Event("film_roll:dom_ready")
 
-    @
+    this
 
   bestDirection: (child, rotation_index) ->
     rotation_index ||= jQuery.inArray child, @rotation
@@ -172,9 +172,10 @@ class @FilmRoll
     # find children / width / height
     @width = min_height = 0
     # reset for resizing
-    @wrapper.css
+    @wrapper.css {
       height: '',
       'min-height': 0
+    }
     @shuttle.width('').removeClass('film_roll_shuttle').addClass 'film_roll_resizing'
     @children.width ''
     @div.trigger jQuery.Event("film_roll:resizing")
@@ -201,7 +202,7 @@ class @FilmRoll
     # double the width to take care of any styling and rotation
     @shuttle.width(@real_width * 2).removeClass('film_roll_resizing').addClass 'film_roll_shuttle'
 
-    @
+    this
 
   configureScroll: =>
     unless @scrolled is true
@@ -209,13 +210,13 @@ class @FilmRoll
         @moveLeft()
       , @interval
       @scrolled = true
-    @
+    this
 
   clearScroll: =>
     unless @scrolled is false
       clearInterval @timer
       @scrolled = false
-    @
+    this
 
   childIndex: (child) ->
     jQuery.inArray child, @children
@@ -275,7 +276,7 @@ class @FilmRoll
     # if shuttle width is wider than the wrapper, we need to rotate
     wrapper_width = @wrapper.width()
     if wrapper_width < @real_width # rotate if the children are wider than the container
-      # first, where is this photo? 
+      # first, where is this photo?
       # what should show on either side of this child
       visible_margin = (wrapper_width - @child_widths[index])/2
       if direction == 'right'
@@ -303,7 +304,7 @@ class @FilmRoll
       @shuttle.css 'left', (wrapper_width - @width)/2
     if scrolled
       @configureScroll()
-    @
+    this
 
   resize: =>
     clearTimeout @resize_timer
@@ -316,7 +317,7 @@ class @FilmRoll
       @moveToIndex @index, 'best'
       @div.trigger jQuery.Event("film_roll:resized")
     , 200
-    @
+    this
 
   rotateLeft: =>
     _css_left = @shuttle.css('left')
