@@ -178,10 +178,12 @@ class @FilmRoll
     @shuttle.width('').removeClass('film_roll_shuttle').addClass 'film_roll_resizing'
     @children.width ''
     @div.trigger jQuery.Event("film_roll:resizing")
+    @child_widths = []
     @children.each (i,e) =>
       $el = jQuery(e)
       el_width = $el.outerWidth(true)
       $el.width el_width
+      @child_widths.push el_width
       @width += el_width
       unless @options.height
         el_height = $el.outerHeight(true)
@@ -215,11 +217,21 @@ class @FilmRoll
       @scrolled = false
     @
 
+  childIndex: (child) ->
+    jQuery.inArray child, @children
+
+  childWidth: (child) ->
+    index = @childIndex child
+    @child_widths[index] || jQuery(child).outerWidth(true)
+
+  rotationIndex: (child) ->
+    jQuery.inArray child, @rotation
+
   marginLeft: (rotation_index, offset = 0) ->
     margin = 0
     for child, i in @rotation
       if i < rotation_index and i>= offset
-        margin += jQuery(child).outerWidth(true)
+        margin += @childWidth(child)
     margin
 
   marginRight: (rotation_index, offset = 0) ->
@@ -227,7 +239,7 @@ class @FilmRoll
     margin = 0
     for child, i in @rotation
       if i > rotation_index and i <= offset
-        margin += jQuery(child).outerWidth(true)
+        margin += @childWidth(child)
     margin
 
   moveLeft: =>
@@ -243,7 +255,7 @@ class @FilmRoll
     return false
 
   moveToChild: (element) ->
-    child_index = jQuery.inArray jQuery(element)[0], @children
+    child_index = @childIndex jQuery(element)[0]
     if child_index > -1
       @moveToIndex child_index
 
@@ -265,7 +277,7 @@ class @FilmRoll
     if wrapper_width < @real_width # rotate if the children are wider than the container
       # first, where is this photo? 
       # what should show on either side of this child
-      visible_margin = (wrapper_width - jQuery(child).outerWidth(true))/2
+      visible_margin = (wrapper_width - @child_widths[index])/2
       if direction == 'right'
         # rotate so blank space won't show after animation
         while rotation_index == 0 or @marginLeft(rotation_index) < visible_margin
@@ -311,7 +323,7 @@ class @FilmRoll
     _shuttle_left = if _css_left then parseInt(_css_left, 10) else 0
     _first_child = @rotation.shift()
     @rotation.push _first_child
-    @shuttle.css 'left', _shuttle_left + jQuery(_first_child).outerWidth(true)
+    @shuttle.css 'left', _shuttle_left + @childWidth(_first_child)
     @shuttle.append @shuttle.children().first().detach()
 
   rotateRight: =>
@@ -319,7 +331,7 @@ class @FilmRoll
     _shuttle_left = if _css_left then parseInt(_css_left, 10) else 0
     _last_child = @rotation.pop()
     @rotation.unshift _last_child
-    @shuttle.css 'left', _shuttle_left - jQuery(_last_child).outerWidth(true)
+    @shuttle.css 'left', _shuttle_left - @childWidth(_last_child)
     @shuttle.prepend @shuttle.children().last().detach()
 
   # adapted from https://gist.github.com/jackfuchs/556448
