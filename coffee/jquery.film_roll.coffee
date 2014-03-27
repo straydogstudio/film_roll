@@ -266,14 +266,15 @@ class @FilmRoll
       # first, where is this photo? 
       # what should show on either side of this child
       visible_margin = (wrapper_width - jQuery(child).outerWidth(true))/2
+      maxIterations = @children.length
       if direction == 'right'
         # rotate so blank space won't show after animation
-        while rotation_index == 0 or @marginLeft(rotation_index) < visible_margin
+        while maxIterations-- >= 0 and (rotation_index == 0 or @marginLeft(rotation_index) < visible_margin)
           @rotateRight()
           rotation_index = jQuery.inArray child, @rotation
       else # we are moving left
         # rotate so blank space won't show after animation
-        while rotation_index == @children.length - 1 or @marginRight(rotation_index) < visible_margin
+        while maxIterations-- >= 0 and (rotation_index == @children.length - 1 or @marginRight(rotation_index) < visible_margin)
           @rotateLeft()
           rotation_index = jQuery.inArray child, @rotation
       new_left_margin = -1*(@marginLeft(rotation_index)-visible_margin)
