@@ -275,7 +275,7 @@ class @FilmRoll
     jQuery(@pager_links[index]).addClass 'active'
     # if shuttle width is wider than the wrapper, we need to rotate
     wrapper_width = @wrapper.width()
-    if wrapper_width < @real_width # rotate if the children are wider than the container
+    if wrapper_width < @real_width && @children.length > 1 # rotate if the children are wider than the container
       # first, where is this photo?
       # what should show on either side of this child
       visible_margin = (wrapper_width - @child_widths[index])/2
