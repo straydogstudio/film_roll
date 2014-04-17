@@ -28,6 +28,8 @@ class @FilmRoll
     @wrapper = @div.find '.film_roll_wrapper'
     @shuttle = @div.find '.film_roll_shuttle'
     @rotation = []
+    @ldupes = []
+    @rdupes = []
 
     # set height and temporary width
     @shuttle.width if @options.shuttle_width then parseInt(@options.shuttle_width,10) else 10000
@@ -96,7 +98,7 @@ class @FilmRoll
       @mouse_catcher.appendTo(@wrapper).mousemove () =>
         @hover_in()
         @mouse_catcher.remove()
-      
+
     # set classes and get rotation
     first_child = null
     @children.each (i,e) =>
@@ -127,7 +129,15 @@ class @FilmRoll
     # scroll variables
     @interval = @options.interval || 4000
     @animation = @options.animation || @interval/4
-    @easing = @options.easing || 'swing'
+    @easing = if @options.easing == false then false else (@options.easing || 'swing')
+
+    if @options.easing == 'css'
+      jQuery("<style type='text/css'>#{@options.container} .film_roll_shuttle.transition {transition: left #{@animation}ms;}</style>").appendTo('head')
+      @shuttle.on "transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", =>
+        console.log 'transitioned'
+        @shuttle.removeClass 'transition'
+        @div.trigger jQuery.Event("film_roll:moved")
+        @moveToClear(@direction)
 
     # configure window resize event
     unless @options.resize is false
@@ -148,7 +158,7 @@ class @FilmRoll
     this
 
   bestDirection: (child, rotation_index) ->
-    rotation_index ||= jQuery.inArray child, @rotation
+    rotation_index ?= jQuery.inArray child, @rotation
     if rotation_index < (@children.length/2) then 'right' else 'left'
 
   configureHover: =>
@@ -219,7 +229,10 @@ class @FilmRoll
     this
 
   childIndex: (child) ->
-    jQuery.inArray child, @children
+    child = jQuery(child)[0]
+    if child
+      child_id = child.getAttribute 'data-film-roll-child-id'
+      child_id || jQuery.inArray child, @children
 
   childWidth: (child) ->
     index = @childIndex child
@@ -230,17 +243,31 @@ class @FilmRoll
 
   marginLeft: (rotation_index, offset = 0) ->
     margin = 0
-    for child, i in @rotation
-      if i < rotation_index and i>= offset
-        margin += @childWidth(child)
+    # for child, i in @rotation
+      # if i < rotation_index and i>= offset
+        # margin += @childWidth(child)
+    limit = rotation_index
+    while offset < limit
+      margin += @childWidth(@rotation[offset++])
+    child_id = @rotation[rotation_index].getAttribute('data-film-roll-child-id')
+    jQuery.each @rdupes, (i, dup) =>
+      if dup.data('filmRollChildId') != child_id
+        margin += @childWidth(dup)
     margin
 
   marginRight: (rotation_index, offset = 0) ->
     offset = @rotation.length - offset - 1
     margin = 0
-    for child, i in @rotation
-      if i > rotation_index and i <= offset
-        margin += @childWidth(child)
+    # for child, i in @rotation
+    #   if i > rotation_index and i <= offset
+    #     margin += @childWidth(child)
+    i = rotation_index + 1
+    while i < offset
+      margin += @childWidth(@rotation[i++])
+    child_id = @rotation[rotation_index].getAttribute('data-film-roll-child-id')
+    jQuery.each @ldupes, (i, dup) =>
+      if dup.data('filmRollChildId') != child_id
+        margin += @childWidth(dup)
     margin
 
   moveLeft: =>
@@ -249,18 +276,17 @@ class @FilmRoll
     return false
 
   moveRight: =>
-    @index -= 1
-    if @index < 0
-      @index = @children.length - 1
+    l = @children.length
+    @index = (@index+l-1) % l
     @moveToIndex @index, 'right', true
     return false
 
   moveToChild: (element) ->
-    child_index = @childIndex jQuery(element)[0]
+    child_index = @childIndex element
     if child_index > -1
       @moveToIndex child_index
 
-  moveToIndex: (index, direction, animate = true) ->
+  moveToIndex: (index, direction) ->
     @index = index
     scrolled = @scrolled
     @clearScroll()
@@ -279,32 +305,58 @@ class @FilmRoll
       # first, where is this photo?
       # what should show on either side of this child
       visible_margin = (wrapper_width - @child_widths[index])/2
+      shuttle_left = @shuttleLeft()
       if direction == 'right'
-        # rotate so blank space won't show after animation
-        while rotation_index == 0 or @marginLeft(rotation_index) < visible_margin
-          @rotateRight()
-          rotation_index = jQuery.inArray child, @rotation
+        # clone so blank space won't show after animation
+        margin_left = @marginLeft(rotation_index)
+        while margin_left < visible_margin
+          margin_left += @cloneRight(shuttle_left)
+          @rotation.unshift @rotation.pop()
       else # we are moving left
         # rotate so blank space won't show after animation
-        while rotation_index == @children.length - 1 or @marginRight(rotation_index) < visible_margin
-          @rotateLeft()
-          rotation_index = jQuery.inArray child, @rotation
-      new_left_margin = -1*(@marginLeft(rotation_index)-visible_margin)
-      if animate
+        margin_right = @marginRight(rotation_index)
+        while margin_right < visible_margin
+          margin_right += @cloneLeft()
+          @rotation.push @rotation.shift()
+        margin_left = @marginLeft(rotation_index)
+      @shuttle_left = new_left_margin = -1*(margin_left-visible_margin)
+      if @easing == 'css'
+        @shuttle.addClass 'transition'
+        @direction = direction
+        @shuttle.css 'left', new_left_margin
+      else if @easing == false
+        @shuttle.css 'left', new_left_margin
+        @div.trigger jQuery.Event("film_roll:moved")
+        @moveToClear(direction)
+      else
         direction_class = "moving_#{direction}"
         @shuttle.addClass direction_class
         @div.trigger jQuery.Event("film_roll:moving")
         @shuttle.stop().animate { 'left': new_left_margin }, @animation, @easing, =>
           @shuttle.removeClass direction_class
+          @moveToClear(direction)
           @div.trigger jQuery.Event("film_roll:moved")
-      else
-        @shuttle.css 'left', new_left_margin
-        @div.trigger jQuery.Event("film_roll:moved")
     else
       @shuttle.css 'left', (wrapper_width - @width)/2
     if scrolled
       @configureScroll()
     this
+
+  moveToClear: (direction) ->
+    shuttle_left = @shuttle_left
+    while dup = @ldupes.shift()
+      i = @childIndex dup
+      @shuttle.append jQuery(@children[i]).detach()
+      shuttle_left += @child_widths[i]
+      dup.remove()
+    while dup = @rdupes.shift()
+      i = @childIndex dup
+      @shuttle.prepend jQuery(@children[i]).detach()
+      dup.remove()
+    @shuttle.css 'left', shuttle_left
+    # @shuttle.css 'left', (wrapper_width - @width)/2
+    delete @shuttle_left
+    shuttle_left
 
   resize: =>
     clearTimeout @resize_timer
@@ -319,21 +371,67 @@ class @FilmRoll
     , 200
     this
 
-  rotateLeft: =>
-    _css_left = @shuttle.css('left')
-    _shuttle_left = if _css_left then parseInt(_css_left, 10) else 0
-    _first_child = @rotation.shift()
-    @rotation.push _first_child
-    @shuttle.css 'left', _shuttle_left + @childWidth(_first_child)
-    @shuttle.append @shuttle.children().first().detach()
+  # clearLeft: ->
+  #   for dup in @ldupes
+  #     dup.remove()
+  #   @ldupes = []
+  #   this
 
-  rotateRight: =>
-    _css_left = @shuttle.css('left')
-    _shuttle_left = if _css_left then parseInt(_css_left, 10) else 0
-    _last_child = @rotation.pop()
-    @rotation.unshift _last_child
-    @shuttle.css 'left', _shuttle_left - @childWidth(_last_child)
-    @shuttle.prepend @shuttle.children().last().detach()
+  cloneLeft: (i = 1) =>
+    j = -1
+    clone_width  = 0
+    offset = @ldupes.length
+    length = @rotation.length
+    while (j += 1) < i
+      k = (j+offset) % length
+      dup = jQuery(@rotation[k]).clone()
+      clone_width += @childWidth(dup)
+      @shuttle.append dup
+      @ldupes.push dup
+    clone_width
+
+  # rotateLeft: (i = 1) =>
+  #   width_change = 0
+  #   j = -1
+  #   while (j += 1) < i
+  #     first_child = @shuttle.children().first()
+  #     @shuttle.append first_child.detach()
+  #     width_change += @childWidth(first_child)
+  #   width_change
+
+  # clearRight: ->
+  #   for dup in @rdupes
+  #     dup.remove()
+  #   @rdupes = []
+  #   this
+
+  cloneRight: (shuttle_left, i = 1) =>
+    clone_width  = 0
+    offset = @rdupes.length
+    length = @rotation.length
+    j = -1
+    while (j += 1) < i
+      k = (j+length-1-offset) % length
+      dup = jQuery(@rotation[k]).clone()
+      clone_width += @childWidth(dup)
+      @shuttle.prepend dup
+      @rdupes.push dup
+    @shuttle.css 'left', shuttle_left - clone_width
+    clone_width
+
+  # rotateRight: (i = 1) =>
+  #   j = -1
+  #   while (j += 1) < i
+  #     _last_child = @rotation.pop()
+  #     @rotation.unshift _last_child
+  #     last_child  = jQuery(_last_child)
+  #     @shuttle.prepend last_child.detach()
+  #   # @clearRight()
+  #   this
+
+  shuttleLeft: ->
+    css_left = @shuttle.css('left')
+    if css_left then parseInt(css_left, 10) else 0
 
   # adapted from https://gist.github.com/jackfuchs/556448
   # @supportsCSS: (p) ->

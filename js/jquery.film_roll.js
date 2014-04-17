@@ -21,8 +21,8 @@
   this.FilmRoll = (function() {
     function FilmRoll(options) {
       this.options = options != null ? options : {};
-      this.rotateRight = __bind(this.rotateRight, this);
-      this.rotateLeft = __bind(this.rotateLeft, this);
+      this.cloneRight = __bind(this.cloneRight, this);
+      this.cloneLeft = __bind(this.cloneLeft, this);
       this.resize = __bind(this.resize, this);
       this.moveRight = __bind(this.moveRight, this);
       this.moveLeft = __bind(this.moveLeft, this);
@@ -48,6 +48,8 @@
       this.wrapper = this.div.find('.film_roll_wrapper');
       this.shuttle = this.div.find('.film_roll_shuttle');
       this.rotation = [];
+      this.ldupes = [];
+      this.rdupes = [];
       this.shuttle.width(this.options.shuttle_width ? parseInt(this.options.shuttle_width, 10) : 10000);
       if (this.options.start_height) {
         this.wrapper.height(parseInt(this.options.start_height, 10));
@@ -128,7 +130,16 @@
       this.index = this.options.start_index || 0;
       this.interval = this.options.interval || 4000;
       this.animation = this.options.animation || this.interval / 4;
-      this.easing = this.options.easing || 'swing';
+      this.easing = this.options.easing === false ? false : this.options.easing || 'swing';
+      if (this.options.easing === 'css') {
+        jQuery("<style type='text/css'>" + this.options.container + " .film_roll_shuttle.transition {transition: left " + this.animation + "ms;}</style>").appendTo('head');
+        this.shuttle.on("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", function() {
+          console.log('transitioned');
+          _this.shuttle.removeClass('transition');
+          _this.div.trigger(jQuery.Event("film_roll:moved"));
+          return _this.moveToClear(_this.direction);
+        });
+      }
       if (this.options.resize !== false) {
         jQuery(window).resize(function() {
           return _this.resize();
@@ -148,7 +159,9 @@
     };
 
     FilmRoll.prototype.bestDirection = function(child, rotation_index) {
-      rotation_index || (rotation_index = jQuery.inArray(child, this.rotation));
+      if (rotation_index == null) {
+        rotation_index = jQuery.inArray(child, this.rotation);
+      }
       if (rotation_index < (this.children.length / 2)) {
         return 'right';
       } else {
@@ -236,7 +249,12 @@
     };
 
     FilmRoll.prototype.childIndex = function(child) {
-      return jQuery.inArray(child, this.children);
+      var child_id;
+      child = jQuery(child)[0];
+      if (child) {
+        child_id = child.getAttribute('data-film-roll-child-id');
+        return child_id || jQuery.inArray(child, this.children);
+      }
     };
 
     FilmRoll.prototype.childWidth = function(child) {
@@ -250,35 +268,43 @@
     };
 
     FilmRoll.prototype.marginLeft = function(rotation_index, offset) {
-      var child, i, margin, _i, _len, _ref;
+      var child_id, limit, margin,
+        _this = this;
       if (offset == null) {
         offset = 0;
       }
       margin = 0;
-      _ref = this.rotation;
-      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-        child = _ref[i];
-        if (i < rotation_index && i >= offset) {
-          margin += this.childWidth(child);
-        }
+      limit = rotation_index;
+      while (offset < limit) {
+        margin += this.childWidth(this.rotation[offset++]);
       }
+      child_id = this.rotation[rotation_index].getAttribute('data-film-roll-child-id');
+      jQuery.each(this.rdupes, function(i, dup) {
+        if (dup.data('filmRollChildId') !== child_id) {
+          return margin += _this.childWidth(dup);
+        }
+      });
       return margin;
     };
 
     FilmRoll.prototype.marginRight = function(rotation_index, offset) {
-      var child, i, margin, _i, _len, _ref;
+      var child_id, i, margin,
+        _this = this;
       if (offset == null) {
         offset = 0;
       }
       offset = this.rotation.length - offset - 1;
       margin = 0;
-      _ref = this.rotation;
-      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-        child = _ref[i];
-        if (i > rotation_index && i <= offset) {
-          margin += this.childWidth(child);
-        }
+      i = rotation_index + 1;
+      while (i < offset) {
+        margin += this.childWidth(this.rotation[i++]);
       }
+      child_id = this.rotation[rotation_index].getAttribute('data-film-roll-child-id');
+      jQuery.each(this.ldupes, function(i, dup) {
+        if (dup.data('filmRollChildId') !== child_id) {
+          return margin += _this.childWidth(dup);
+        }
+      });
       return margin;
     };
 
@@ -289,28 +315,24 @@
     };
 
     FilmRoll.prototype.moveRight = function() {
-      this.index -= 1;
-      if (this.index < 0) {
-        this.index = this.children.length - 1;
-      }
+      var l;
+      l = this.children.length;
+      this.index = (this.index + l - 1) % l;
       this.moveToIndex(this.index, 'right', true);
       return false;
     };
 
     FilmRoll.prototype.moveToChild = function(element) {
       var child_index;
-      child_index = this.childIndex(jQuery(element)[0]);
+      child_index = this.childIndex(element);
       if (child_index > -1) {
         return this.moveToIndex(child_index);
       }
     };
 
-    FilmRoll.prototype.moveToIndex = function(index, direction, animate) {
-      var child, direction_class, new_left_margin, rotation_index, scrolled, visible_margin, wrapper_width,
+    FilmRoll.prototype.moveToIndex = function(index, direction) {
+      var child, direction_class, margin_left, margin_right, new_left_margin, rotation_index, scrolled, shuttle_left, visible_margin, wrapper_width,
         _this = this;
-      if (animate == null) {
-        animate = true;
-      }
       this.index = index;
       scrolled = this.scrolled;
       this.clearScroll();
@@ -326,19 +348,31 @@
       wrapper_width = this.wrapper.width();
       if (wrapper_width < this.real_width) {
         visible_margin = (wrapper_width - this.child_widths[index]) / 2;
+        shuttle_left = this.shuttleLeft();
         if (direction === 'right') {
-          while (rotation_index === 0 || this.marginLeft(rotation_index) < visible_margin) {
-            this.rotateRight();
-            rotation_index = jQuery.inArray(child, this.rotation);
+          margin_left = this.marginLeft(rotation_index);
+          while (margin_left < visible_margin) {
+            margin_left += this.cloneRight(shuttle_left);
+            this.rotation.unshift(this.rotation.pop());
           }
         } else {
-          while (rotation_index === this.children.length - 1 || this.marginRight(rotation_index) < visible_margin) {
-            this.rotateLeft();
-            rotation_index = jQuery.inArray(child, this.rotation);
+          margin_right = this.marginRight(rotation_index);
+          while (margin_right < visible_margin) {
+            margin_right += this.cloneLeft();
+            this.rotation.push(this.rotation.shift());
           }
+          margin_left = this.marginLeft(rotation_index);
         }
-        new_left_margin = -1 * (this.marginLeft(rotation_index) - visible_margin);
-        if (animate) {
+        this.shuttle_left = new_left_margin = -1 * (margin_left - visible_margin);
+        if (this.easing === 'css') {
+          this.shuttle.addClass('transition');
+          this.direction = direction;
+          this.shuttle.css('left', new_left_margin);
+        } else if (this.easing === false) {
+          this.shuttle.css('left', new_left_margin);
+          this.div.trigger(jQuery.Event("film_roll:moved"));
+          this.moveToClear(direction);
+        } else {
           direction_class = "moving_" + direction;
           this.shuttle.addClass(direction_class);
           this.div.trigger(jQuery.Event("film_roll:moving"));
@@ -346,11 +380,9 @@
             'left': new_left_margin
           }, this.animation, this.easing, function() {
             _this.shuttle.removeClass(direction_class);
+            _this.moveToClear(direction);
             return _this.div.trigger(jQuery.Event("film_roll:moved"));
           });
-        } else {
-          this.shuttle.css('left', new_left_margin);
-          this.div.trigger(jQuery.Event("film_roll:moved"));
         }
       } else {
         this.shuttle.css('left', (wrapper_width - this.width) / 2);
@@ -359,6 +391,25 @@
         this.configureScroll();
       }
       return this;
+    };
+
+    FilmRoll.prototype.moveToClear = function(direction) {
+      var dup, i, shuttle_left;
+      shuttle_left = this.shuttle_left;
+      while (dup = this.ldupes.shift()) {
+        i = this.childIndex(dup);
+        this.shuttle.append(jQuery(this.children[i]).detach());
+        shuttle_left += this.child_widths[i];
+        dup.remove();
+      }
+      while (dup = this.rdupes.shift()) {
+        i = this.childIndex(dup);
+        this.shuttle.prepend(jQuery(this.children[i]).detach());
+        dup.remove();
+      }
+      this.shuttle.css('left', shuttle_left);
+      delete this.shuttle_left;
+      return shuttle_left;
     };
 
     FilmRoll.prototype.resize = function() {
@@ -378,24 +429,53 @@
       return this;
     };
 
-    FilmRoll.prototype.rotateLeft = function() {
-      var _css_left, _first_child, _shuttle_left;
-      _css_left = this.shuttle.css('left');
-      _shuttle_left = _css_left ? parseInt(_css_left, 10) : 0;
-      _first_child = this.rotation.shift();
-      this.rotation.push(_first_child);
-      this.shuttle.css('left', _shuttle_left + this.childWidth(_first_child));
-      return this.shuttle.append(this.shuttle.children().first().detach());
+    FilmRoll.prototype.cloneLeft = function(i) {
+      var clone_width, dup, j, k, length, offset;
+      if (i == null) {
+        i = 1;
+      }
+      j = -1;
+      clone_width = 0;
+      offset = this.ldupes.length;
+      length = this.rotation.length;
+      while ((j += 1) < i) {
+        k = (j + offset) % length;
+        dup = jQuery(this.rotation[k]).clone();
+        clone_width += this.childWidth(dup);
+        this.shuttle.append(dup);
+        this.ldupes.push(dup);
+      }
+      return clone_width;
     };
 
-    FilmRoll.prototype.rotateRight = function() {
-      var _css_left, _last_child, _shuttle_left;
-      _css_left = this.shuttle.css('left');
-      _shuttle_left = _css_left ? parseInt(_css_left, 10) : 0;
-      _last_child = this.rotation.pop();
-      this.rotation.unshift(_last_child);
-      this.shuttle.css('left', _shuttle_left - this.childWidth(_last_child));
-      return this.shuttle.prepend(this.shuttle.children().last().detach());
+    FilmRoll.prototype.cloneRight = function(shuttle_left, i) {
+      var clone_width, dup, j, k, length, offset;
+      if (i == null) {
+        i = 1;
+      }
+      clone_width = 0;
+      offset = this.rdupes.length;
+      length = this.rotation.length;
+      j = -1;
+      while ((j += 1) < i) {
+        k = (j + length - 1 - offset) % length;
+        dup = jQuery(this.rotation[k]).clone();
+        clone_width += this.childWidth(dup);
+        this.shuttle.prepend(dup);
+        this.rdupes.push(dup);
+      }
+      this.shuttle.css('left', shuttle_left - clone_width);
+      return clone_width;
+    };
+
+    FilmRoll.prototype.shuttleLeft = function() {
+      var css_left;
+      css_left = this.shuttle.css('left');
+      if (css_left) {
+        return parseInt(css_left, 10);
+      } else {
+        return 0;
+      }
     };
 
     return FilmRoll;
