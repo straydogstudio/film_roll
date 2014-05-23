@@ -30,11 +30,18 @@
       @wrapper = @div.find '.film_roll_wrapper'
       @shuttle = @div.find '.film_roll_shuttle'
       @rotation = []
+      @timeouts = []
+      @pause    = false
 
       # set height and temporary width
       @shuttle.width if @options.shuttle_width then parseInt(@options.shuttle_width,10) else 10000
       if @options.start_height
         @wrapper.height parseInt(@options.start_height, 10)
+
+      # scroll variables
+      @interval = @options.interval || 4000
+      @animation = @options.animation || @interval/4
+      @easing = @options.easing || 'swing'
 
       # add styling
       if @options.vertical_center
@@ -43,6 +50,7 @@
         $("<style type='text/css'>
 .film_roll_wrapper{display:block;text-align:center;float:none;position:relative;top:auto;right:auto;bottom:auto;left:auto;z-index:auto;width:100%;height:100%;margin:0 !important;padding:0 !important;overflow:hidden;}
 .film_roll_shuttle{text-align:left;float:none;position:relative;top:0;left:0;right:auto;bottom:auto;height:100%;margin:0 !important;padding:0 !important;z-index:auto;}
+.film_roll_shuttle.transition{transition:#{@animation}ms left}
 .film_roll_shuttle.vertical_center:before{content:'';display:inline-block;height:100%;vertical-align:middle;margin-right:-0.25em;}
 .film_roll_child{position:relative;display:inline-block;*display:inline;vertical-align:middle;zoom:1;}
 .film_roll_prev,.film_roll_next{position:absolute;top:48%;left:15px;width:40px;height:40px;margin:-20px 0 0 0;padding:0;font-size:60px;font-weight:100;line-height:30px;color:white;text-align:center;background:#222;border:3px solid white;border-radius:23px;opacity:0.5}
@@ -126,11 +134,6 @@
       # set start index
       @index = @options.start_index || 0
 
-      # scroll variables
-      @interval = @options.interval || 4000
-      @animation = @options.animation || @interval/4
-      @easing = @options.easing || FilmRoll.default_easing
-
       # configure window resize event
       unless @options.resize is false
         $(window).resize =>
@@ -162,6 +165,10 @@
     configureLoad: =>
       @configureWidths()
       @moveToIndex @index, 'right', true
+      unless @options.transition is false
+        if @transitions()
+          @options.transition = true
+          @shuttle.addClass 'transition'
       if @options.hover == 'scroll'
         @options.scroll = false
         @configureHover()
@@ -233,7 +240,7 @@
     marginLeft: (rotation_index, offset = 0) ->
       margin = 0
       for child, i in @rotation
-        if i < rotation_index and i>= offset
+        if i < rotation_index and i >= offset
           margin += @childWidth(child)
       margin
 
@@ -251,10 +258,16 @@
       return false
 
     moveRight: =>
-      @index -= 1
-      if @index < 0
-        @index = @children.length - 1
-      @moveToIndex @index, 'right', true
+      if @pause
+        @index -= 1
+        if @index < 0
+          @index = @children.length - 1
+        @moveToIndex @index, 'right', true
+        @pause = false
+      else
+        @pause = true
+        _css_left = @shuttle.css('left')
+        @shuttle.css('left', _css_left)
       return false
 
     moveToChild: (element) ->
@@ -296,9 +309,38 @@
           direction_class = "moving_#{direction}"
           @shuttle.addClass direction_class
           @div.trigger $.Event("film_roll:moving")
-          @shuttle.stop().transition { 'left': new_left_margin }, @animation, @easing, =>
-            @shuttle.removeClass direction_class
-            @div.trigger $.Event("film_roll:moved")
+          console.log @shuttle.css('left')
+          if @options.transition
+            i = 0
+            while i < @timeouts.length
+              clearTimeout(@timeouts[i++])
+            @timeouts.push setTimeout =>
+              @shuttle.addClass("transition")
+              @shuttle.css 'left', new_left_margin
+            , 0 
+            @timeouts.push setTimeout =>
+              @shuttle.removeClass direction_class
+              @div.trigger $.Event("film_roll:moved")
+            , @animation
+          else
+            @shuttle.stop().transition { 'left': new_left_margin }, @animation, @easing, =>
+              @shuttle.removeClass direction_class
+              @div.trigger $.Event("film_roll:moved")
+          # setTimeout =>
+          #   console.log @shuttle.css('left')
+          # , 200
+          # setTimeout =>
+          #   console.log @shuttle.css('left')
+          # , 400
+          # setTimeout =>
+          #   console.log @shuttle.css('left')
+          # , 600
+          # setTimeout =>
+          #   console.log @shuttle.css('left')
+          # , 800
+          # setTimeout =>
+          #   console.log @shuttle.css('left')
+          # , 1000
         else
           @shuttle.css 'left', new_left_margin
           @div.trigger $.Event("film_roll:moved")
@@ -323,6 +365,9 @@
 
     rotateLeft: =>
       _css_left = @shuttle.css('left')
+      if @options.transition
+        @shuttle.removeClass('transition')
+        @shuttle.css('left', _css_left)
       _shuttle_left = if _css_left then parseInt(_css_left, 10) else 0
       _first_child = @rotation.shift()
       @rotation.push _first_child
@@ -331,17 +376,28 @@
 
     rotateRight: =>
       _css_left = @shuttle.css('left')
+      if @options.transition
+        @shuttle.removeClass('transition')
+        @shuttle.css('left', _css_left)
       _shuttle_left = if _css_left then parseInt(_css_left, 10) else 0
       _last_child = @rotation.pop()
       @rotation.unshift _last_child
       @shuttle.css 'left', _shuttle_left - @childWidth(_last_child)
       @shuttle.prepend @shuttle.children().last().detach()
 
-  if $.support.transition
-    # FilmRoll.default_easing = 'easeInOutCubic'
-    FilmRoll.default_easing = 'cubic-bezier(.02,.01,.47,1)'
-  else
-    FilmRoll.default_easing = 'swing'
-    $.fn.transition = $.fn.animate
+    # adapted from https://gist.github.com/jackfuchs/556448
+    transitions: ->
+      b = document.body || document.documentElement
+      s = b.style
+      # No css support detected
+      if typeof s == 'undefined'
+        return false
+      # Tests for standard prop
+      if typeof s['transition'] == 'string'
+        return true
+      # Tests for vendor specific prop
+      for p in ['Moz', 'Webkit', 'Khtml', 'O', 'ms', 'Icab']
+        if typeof s[p + 'Transition'] == 'string'
+          return true
 
 ) jQuery
