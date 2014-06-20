@@ -177,6 +177,15 @@ var film_roll = new FilmRoll({
 
 See an [example here](http://straydogstudio.github.io/film_roll/fullscreen.html).
 
+## Responsive Images
+
+FilmRoll must have a specific width for all child elements to center a given item. The question is, if the children have responsive sizes, what size should they be? To answer this question FilmRoll makes an assumption: the size of the child elements before all FilmRoll styling is applied is what they should be in the carousel. It will measure the child element widths, and fix them with inline styling.
+
+You can take advantage of this in a few ways:
+
+* If you have varying widths, and the heights end up changing in a mobile format, use CSS to force the height of all children. 
+* Use one 'banner' child to resize all other children to the same height by calling javascript on the `film_roll:resizing` event.
+
 ## Using Javascript
 
 If you wish to move to a specific child using external javascript, use the `moveToIndex` or `moveToChild` functions:
