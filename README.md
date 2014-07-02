@@ -21,6 +21,16 @@
     - Swipe for mobile
     - Simple external link using classes/ids (For now [see Javascript below](#using-javascript))
 
+##A Note on Performance
+
+jQuery's animation tends to cause high cpu load. I have done quite a bit of work to address this issue. I have tried providing CSS transition support, and used a few jQuery animate alternatives (the latest being [transit.js](http://ricostacruz.com/jquery.transit/).) The current version, 1.9, prefers transit.js, and falls back to jQuery animate if transit is not present. Transit provides much better results. 
+
+There is, however, one draw back. In all alternative solutions a click during an animation does not work correctly. E.g. if someone clicks next twice, the library is not able to properly detect the current position of the shuttle in mid animation. So things jump around. If this does not bother you try transit.js. If it does, stick with jQuery animate. 
+
+Using a queue may be next. I do not like the thought of consecutive advances, but it is better than jerky movement. A complete rewrite is also another possibility.
+
+Please weigh in with an issue if you have suggestions / ideas.
+
 ##In The Works
 
 - Examples for:
