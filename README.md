@@ -4,7 +4,7 @@
 
 ##Description
 
-**FilmRoll** is a lightweight jQuery carousel (8.4 kb) that focuses on one item at a time, centering it in the view, regardless of the relative sizes of the carousel items.
+**FilmRoll** is a lightweight jQuery carousel (12 kb minified) that focuses on one item at a time, centering it in the view, regardless of the relative sizes of the carousel items.
 
 [**SEE DEMO**](http://straydogstudio.github.io/film_roll)
 
@@ -354,6 +354,8 @@ FilmRoll sets the shuttle (the the div that holds all elements and slides back a
 
 ##Changelog
 
+- **0.1.10:** (7/18/14) Fix $.width change
+- **0.1.9:** (4/17/14) Cache child widths, transit.js support
 - **0.1.8:** (2/25/14) Options for hover, easing, and configure_load function
 - **0.1.7:** (10/27/13) Full height screen support, better events, classes for CSS animations
 - **0.1.6:** (10/27/13) Full screen support, height no longer required

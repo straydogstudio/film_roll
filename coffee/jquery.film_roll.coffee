@@ -1,6 +1,6 @@
 ###
   FilmRoll (for jQuery)
-  version: 0.1.9 (4/17/14)
+  version: 0.1.10 (7/18/14)
   @requires $ >= v1.4
 
   By Noel Peden
@@ -184,8 +184,9 @@
       @child_widths = []
       @children.each (i,e) =>
         $el = $(e)
+        $el.width $el.outerWidth(true)
+        #Sometimes $.width changes the value, so we get it again
         el_width = $el.outerWidth(true)
-        $el.width el_width
         @child_widths.push el_width
         @width += el_width
         unless @options.height
@@ -339,9 +340,9 @@
 
   if $.support.transition
     # FilmRoll.default_easing = 'easeInOutCubic'
-    FilmRoll.default_easing = 'cubic-bezier(.02,.01,.47,1)'
+    @FilmRoll.default_easing = 'cubic-bezier(.02,.01,.47,1)'
   else
-    FilmRoll.default_easing = 'swing'
+    @FilmRoll.default_easing = 'swing'
     $.fn.transition = $.fn.animate
 
 ) jQuery
