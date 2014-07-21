@@ -1,0 +1,15 @@
+{
+  "name": "FilmRoll",
+  "version": "0.1.11",
+  "main": "js/jquery.film_roll.min.js",
+  "ignore": [
+    "coffee"
+  ]
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/straydogstudio/film_roll"
+  },
+  "dependencies": {
+    "jquery": ">=1.4",
+  },
+}
