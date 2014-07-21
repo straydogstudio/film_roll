@@ -30,6 +30,12 @@ body {
   margin-right: 5px;
   /*transition: all 1s ease;*/
 }
+@media (max-width: 580px) {
+  .film_roll_wrapper img {
+    margin: 0;
+    box-shadow: none;
+  }
+}
 .film_roll_wrapper .active img {
   border: 10px solid yellow;
 }
