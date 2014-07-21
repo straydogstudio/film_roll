@@ -356,6 +356,10 @@ Eventually I will have a fix for this. In the meantime, repeat the children to f
 
 FilmRoll sets the shuttle (the the div that holds all elements and slides back and forth) to 10000 pixels wide until the page loads. When the page loads, the content is used to determine the appropriate width. If 10000 pixels is not enough for the content you will get two rows of children during page load. Try setting `shuttle_width` to a higher value. 
 
+###Box shadow is cut off
+
+jQuery does not measure the box shadow when it measures the height of child elements. If you want FilmRoll to adjust the height dynamically but also make the box shadow visible, set the FilmRoll height with a "+height" string. The integer should be the same as your box shadow height. So if your box shadow is `10px`, use `height: "+10"`. FilmRoll will add 10 pixels to the minimum height of the wrapper.
+
 ##Changelog
 
 - **0.1.11:** (7/18/14) Swipe movement, height padding
