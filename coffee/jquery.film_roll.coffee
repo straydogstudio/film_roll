@@ -1,6 +1,6 @@
 ###
   FilmRoll (for jQuery)
-  version: 0.1.10 (7/18/14)
+  version: 0.1.11 (7/21/14)
   @requires $ >= v1.4
 
   By Noel Peden
@@ -145,6 +145,9 @@
       else
         $(window).load @configureLoad
 
+      unless @options.swipe is false
+        @configureSwipe()
+
       @div.trigger $.Event("film_roll:dom_ready")
 
       this
@@ -152,6 +155,25 @@
     bestDirection: (child, rotation_index) ->
       rotation_index ||= $.inArray child, @rotation
       if rotation_index < (@children.length/2) then 'right' else 'left'
+
+    cancelClick: (event) ->
+      if $(this).hasClass 'fr-no-click'
+        event.preventDefault()
+        return false
+      return true
+
+    childIndex: (child) ->
+      $.inArray child, @children
+
+    childWidth: (child) ->
+      index = @childIndex child
+      @child_widths[index] || $(child).outerWidth(true)
+
+    clearScroll: =>
+      unless @scrolled is false
+        clearInterval @timer
+        @scrolled = false
+      this
 
     configureHover: =>
       @div.hover @hover_in, @hover_out
@@ -170,6 +192,69 @@
         unless @options.hover is false
           @configureHover()
 
+    configureScroll: =>
+      unless @scrolled is true
+        @timer = setInterval =>
+          @moveLeft()
+        , @interval
+        @scrolled = true
+      this
+
+    configureSwipe: =>
+      unless $.fn.swipe == 'undefined'
+        @div.swipe {
+          swipeStatus: (event, phase, direction, distance) =>
+            if direction == 'up' or direction == 'down'
+              return false
+            if phase == 'start'
+              @was_scrolled = @scrolled
+              if @scrolled
+                @clearScroll()
+              @active_half = @child_widths[@index]/2
+              rotation_index = $.inArray @children[@index], @rotation
+              @offscreen_left = parseInt(@shuttle.css('left'),10)
+              @offscreen_right = @marginRight(rotation_index) - (@wrapper.width() - @child_widths[@index])/2
+              @div.find('a').addClass 'fr-no-click'
+            else if phase == 'move'
+              if direction == 'left'
+                # do we need to advance
+                if distance > @active_half
+                  $(@children[@index]).removeClass('active')
+                  @index = (@index + 1) % @children.length
+                  $(@children[@index]).addClass('active')
+                  @active_half += @child_widths[@index]
+                # do we need to rotate
+                if distance > @offscreen_right
+                  @offscreen_left = @rotateLeft() + distance
+                  @offscreen_right += @childWidth(@rotation[@rotation.length-1])
+                @shuttle.css 'left', @offscreen_left - distance
+              else
+                # do we need to advance
+                if distance > @active_half
+                  $(@children[@index]).removeClass('active')
+                  @index -= 1
+                  if @index < 0
+                    @index = @children.length - 1
+                  $(@children[@index]).addClass('active')
+                  @active_half += @child_widths[@index]
+                # do we need to rotate
+                if distance + @offscreen_left > 0
+                  @offscreen_left = @rotateRight() - distance
+                @shuttle.css 'left', @offscreen_left + distance
+            else
+              if phase == 'end'
+                @moveToIndex(@index, direction)
+              else if phase == 'cancel'
+                @moveToIndex(@index, (if direction == 'right' then 'left' else 'right'))
+              if @was_scrolled
+                @configureScroll()
+            true
+          ,
+          excludedElements:'label, button, input, select, textarea, .noSwipe',
+          allowPageScroll: 'vertical'
+        }
+        @div.find('a').on 'click', @cancelClick
+
     configureWidths: =>
       # find children / width / height
       @width = min_height = 0
@@ -182,6 +267,11 @@
       @children.width ''
       @div.trigger $.Event("film_roll:resizing")
       @child_widths = []
+      if @options.height and @options.height.toString().match(/^\+/)
+        @options.height_padding = parseInt(@options.height, 10)
+        @options.height = null
+      else
+        @options.height_padding = 0
       @children.each (i,e) =>
         $el = $(e)
         $el.width $el.outerWidth(true)
@@ -198,7 +288,7 @@
         @wrapper.height @options.height
       else
         @wrapper.height ''
-        @wrapper.css 'min-height', min_height
+        @wrapper.css 'min-height', min_height + @options.height_padding
 
       # set width
       @real_width = @width
@@ -207,39 +297,18 @@
 
       this
 
-    configureScroll: =>
-      unless @scrolled is true
-        @timer = setInterval =>
-          @moveLeft()
-        , @interval
-        @scrolled = true
-      this
-
-    clearScroll: =>
-      unless @scrolled is false
-        clearInterval @timer
-        @scrolled = false
-      this
-
-    childIndex: (child) ->
-      $.inArray child, @children
-
-    childWidth: (child) ->
-      index = @childIndex child
-      @child_widths[index] || $(child).outerWidth(true)
-
     rotationIndex: (child) ->
       $.inArray child, @rotation
 
-    marginLeft: (rotation_index, offset = 0) ->
+    marginLeft: (rotation_index) ->
       margin = 0
       for child, i in @rotation
-        if i < rotation_index and i>= offset
+        if i < rotation_index and i>= 0
           margin += @childWidth(child)
       margin
 
-    marginRight: (rotation_index, offset = 0) ->
-      offset = @rotation.length - offset - 1
+    marginRight: (rotation_index) ->
+      offset = @rotation.length - 1
       margin = 0
       for child, i in @rotation
         if i > rotation_index and i <= offset
@@ -297,7 +366,7 @@
           direction_class = "moving_#{direction}"
           @shuttle.addClass direction_class
           @div.trigger $.Event("film_roll:moving")
-          @shuttle.stop().transition { 'left': new_left_margin }, @animation, @easing, =>
+          @shuttle.stop().animate { 'left': new_left_margin }, @animation, @easing, =>
             @shuttle.removeClass direction_class
             @div.trigger $.Event("film_roll:moved")
         else
@@ -326,23 +395,22 @@
       _css_left = @shuttle.css('left')
       _shuttle_left = if _css_left then parseInt(_css_left, 10) else 0
       _first_child = @rotation.shift()
+      _new_left = _shuttle_left + @childWidth(_first_child)
       @rotation.push _first_child
-      @shuttle.css 'left', _shuttle_left + @childWidth(_first_child)
+      @shuttle.css 'left', _new_left
       @shuttle.append @shuttle.children().first().detach()
+      _new_left
 
     rotateRight: =>
       _css_left = @shuttle.css('left')
       _shuttle_left = if _css_left then parseInt(_css_left, 10) else 0
       _last_child = @rotation.pop()
+      _new_left = _shuttle_left - @childWidth(_last_child)
       @rotation.unshift _last_child
-      @shuttle.css 'left', _shuttle_left - @childWidth(_last_child)
+      @shuttle.css 'left', _new_left
       @shuttle.prepend @shuttle.children().last().detach()
+      _new_left
 
-  if $.support.transition
-    # FilmRoll.default_easing = 'easeInOutCubic'
-    @FilmRoll.default_easing = 'cubic-bezier(.02,.01,.47,1)'
-  else
-    @FilmRoll.default_easing = 'swing'
-    $.fn.transition = $.fn.animate
+  @FilmRoll.default_easing = 'swing'
 
 ) jQuery

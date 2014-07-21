@@ -17,26 +17,28 @@
 - Provides previous / next buttons and pagination automatically
 - Defaults to auto scroll with pause on hover
 - Supports [full screen usage](http://straydogstudio.github.io/film_roll/fullscreen.html)
+- Swipe movement if [TouchSwipe](https://github.com/mattbryson/TouchSwipe-Jquery-Plugin) is present
 - Yet to be implemented:
-    - Swipe for mobile
     - Simple external link using classes/ids (For now [see Javascript below](#using-javascript))
 
-##A Note on Performance
+##A Note on Performance and [GSAP](http://www.greensock.com/gsap-js/)
 
-jQuery's animation tends to cause high cpu load. I have done quite a bit of work to address this issue. I have tried providing CSS transition support, and used a few jQuery animate alternatives (the latest being [transit.js](http://ricostacruz.com/jquery.transit/).) The current version, 1.9, prefers transit.js, and falls back to jQuery animate if transit is not present. Transit provides much better results. 
+jQuery's animation tends to cause high cpu load. The best solution for this is to use [GreenSock](http://www.greensock.com/gsap-js/) to replace the jQuery animate function. 
 
-There is, however, one draw back. In all alternative solutions a click during an animation does not work correctly. E.g. if someone clicks next twice, the library is not able to properly detect the current position of the shuttle in mid animation. So things jump around. If this does not bother you try transit.js. If it does, stick with jQuery animate. 
+To do so, include the following minimal markup, unless you are using the complete library:
 
-Using a queue may be next. I do not like the thought of consecutive advances, but it is better than jerky movement. A complete rewrite is also another possibility.
-
-Please weigh in with an issue if you have suggestions / ideas.
+```html
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.12.1/plugins/CSSPlugin.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.12.1/easing/EasePack.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.12.1/TweenLite.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.12.1/jquery.gsap.min.js"></script>
+```
 
 ##In The Works
 
 - Examples for:
     - Responsive images
     - CSS animtaions (2D and 3D)
-- Swipe support for mobile
 - Simple external links
 
 ##Usage
@@ -45,6 +47,7 @@ Please weigh in with an issue if you have suggestions / ideas.
 
 - Download [jquery.film_roll.min.js](https://github.com/straydogstudio/film_roll/releases) and place it in your scripts directory
 - Link it in your web page: `<script src="js/jquery.film_roll.js"></script>`
+- For swipe movement, include [TouchSwipe](https://github.com/mattbryson/TouchSwipe-Jquery-Plugin): `<script src="js/jquery.touchSwipe.min.js"></script>`
 
 ###Markup
 
@@ -101,6 +104,7 @@ Options:
 - **:height**: Set the height of the film_roll wrapper (which sits inside the container.) Options are:
     - **Not set** (default): The wrapper will be the height of the container (100%), with a min-height of the tallest element.
     - **Integer/string**: Set the height directly. Can be an integer (pixels) or a string ('75%'.)
+    - **'+Integer'**: Set the min-height to the highest child plus this integer value.
 - **:hover**: If true, pause scroll on hover. If false, ignore hover. If 'scroll', scroll the carousel on hover. True by default.
 - **:interval**: The automatic scroll interval. 4 seconds by default. To turn off the automatic scroll, see the **scroll** option.
 - **:next**: The jquery selector for the next button. Creates its own button by default. (See **prev** option.)
@@ -354,6 +358,7 @@ FilmRoll sets the shuttle (the the div that holds all elements and slides back a
 
 ##Changelog
 
+- **0.1.11:** (7/18/14) Swipe movement, height padding
 - **0.1.10:** (7/18/14) Fix $.width change
 - **0.1.9:** (4/17/14) Cache child widths, transit.js support
 - **0.1.8:** (2/25/14) Options for hover, easing, and configure_load function
