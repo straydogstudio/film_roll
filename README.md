@@ -45,6 +45,14 @@ To do so, include the following minimal markup, unless you are using the complet
 
 ###Installation
 
+Either install with [Bower](http://bower.io/):
+
+```
+bower install FilmRoll
+```
+
+Or:
+
 - Download [jquery.film_roll.min.js](https://github.com/straydogstudio/film_roll/releases) and place it in your scripts directory
 - Link it in your web page: `<script src="js/jquery.film_roll.js"></script>`
 - For swipe movement, include [TouchSwipe](https://github.com/mattbryson/TouchSwipe-Jquery-Plugin): `<script src="js/jquery.touchSwipe.min.js"></script>`
@@ -362,6 +370,7 @@ jQuery does not measure the box shadow when it measures the height of child elem
 
 ##Changelog
 
+- **0.1.12:** (7/18/14) Bower support
 - **0.1.11:** (7/18/14) Swipe movement, height padding
 - **0.1.10:** (7/18/14) Fix $.width change
 - **0.1.9:** (4/17/14) Cache child widths, transit.js support
