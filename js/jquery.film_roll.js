@@ -223,11 +223,15 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
       if ($.fn.swipe !== 'undefined') {
         this.div.swipe({
           swipeStatus: function(event, phase, direction, distance) {
-            var rotation_index;
+            var rotation_index, wrapper_width;
             if (direction === 'up' || direction === 'down') {
               return false;
             }
             if (phase === 'start') {
+              wrapper_width = _this.wrapper.width();
+              if (wrapper_width >= _this.real_width || _this.children.length === 1) {
+                return false;
+              }
               _this.was_scrolled = _this.scrolled;
               if (_this.scrolled) {
                 _this.clearScroll();
@@ -235,7 +239,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
               _this.active_half = _this.child_widths[_this.index] / 2;
               rotation_index = $.inArray(_this.children[_this.index], _this.rotation);
               _this.offscreen_left = parseInt(_this.shuttle.css('left'), 10);
-              _this.offscreen_right = _this.marginRight(rotation_index) - (_this.wrapper.width() - _this.child_widths[_this.index]) / 2;
+              _this.offscreen_right = _this.marginRight(rotation_index) - (wrapper_width - _this.child_widths[_this.index]) / 2;
               _this.div.find('a').addClass('fr-no-click');
             } else if (phase === 'move') {
               if (direction === 'left') {

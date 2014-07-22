@@ -207,13 +207,16 @@
             if direction == 'up' or direction == 'down'
               return false
             if phase == 'start'
+              wrapper_width = @wrapper.width()
+              if wrapper_width >= @real_width || @children.length == 1
+                return false
               @was_scrolled = @scrolled
               if @scrolled
                 @clearScroll()
               @active_half = @child_widths[@index]/2
               rotation_index = $.inArray @children[@index], @rotation
               @offscreen_left = parseInt(@shuttle.css('left'),10)
-              @offscreen_right = @marginRight(rotation_index) - (@wrapper.width() - @child_widths[@index])/2
+              @offscreen_right = @marginRight(rotation_index) - (wrapper_width - @child_widths[@index])/2
               @div.find('a').addClass 'fr-no-click'
             else if phase == 'move'
               if direction == 'left'
