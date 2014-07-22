@@ -60,8 +60,9 @@ If you use [Bower](http://bower.io/) install with `FilmRoll`:
 
 ```
 bower install FilmRoll
-bower install jquery-touchswipe
 ```
+
+[TouchSwipe](https://github.com/mattbryson/TouchSwipe-Jquery-Plugin) will be included as a dependency:
 
 ```html
 <script src="/bower_components/FilmRoll/js/jquery.film_roll.min.js"></script>
