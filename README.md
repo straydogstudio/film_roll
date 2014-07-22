@@ -45,17 +45,28 @@ To do so, include the following minimal markup, unless you are using the complet
 
 ###Installation
 
-Either install with [Bower](http://bower.io/):
+Download [jquery.film_roll.min.js](https://github.com/straydogstudio/film_roll/releases) and place it in your scripts directory.
+
+For swipe movement, include [TouchSwipe](https://github.com/mattbryson/TouchSwipe-Jquery-Plugin).
+
+Then link it in your web page. E.g:
+
+```html
+<script src="js/jquery.film_roll.min.js"></script>
+<script src="js/jquery.touchSwipe.min.js"></script>
+```
+
+If you use [Bower](http://bower.io/) install with `FilmRoll`:
 
 ```
 bower install FilmRoll
+bower install jquery-touchswipe
 ```
 
-Or:
-
-- Download [jquery.film_roll.min.js](https://github.com/straydogstudio/film_roll/releases) and place it in your scripts directory
-- Link it in your web page: `<script src="js/jquery.film_roll.js"></script>`
-- For swipe movement, include [TouchSwipe](https://github.com/mattbryson/TouchSwipe-Jquery-Plugin): `<script src="js/jquery.touchSwipe.min.js"></script>`
+```html
+<script src="/bower_components/FilmRoll/js/jquery.film_roll.min.js"></script>
+<script src="/bower_components/jquery-touchswipe/jquery.touchSwipe.min.js"></script>
+```
 
 ###Markup
 
