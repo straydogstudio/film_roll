@@ -4,7 +4,7 @@
   "main": "js/jquery.film_roll.min.js",
   "ignore": [
     "coffee"
-  ]
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/straydogstudio/film_roll"
