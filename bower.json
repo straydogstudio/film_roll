@@ -10,6 +10,6 @@
     "url": "git://github.com/straydogstudio/film_roll"
   },
   "dependencies": {
-    "jquery": ">=1.4",
-  },
+    "jquery": ">=1.4"
+  }
 }
