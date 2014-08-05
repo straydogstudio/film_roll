@@ -220,7 +220,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
     FilmRoll.prototype.configureSwipe = function() {
       var _this = this;
-      if ($.fn.swipe !== 'undefined') {
+      if (typeof $.fn.swipe !== 'undefined') {
         this.div.swipe({
           swipeStatus: function(event, phase, direction, distance) {
             var rotation_index, wrapper_width;

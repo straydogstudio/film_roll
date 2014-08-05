@@ -201,7 +201,7 @@
       this
 
     configureSwipe: =>
-      unless $.fn.swipe == 'undefined'
+      unless typeof $.fn.swipe == 'undefined'
         @div.swipe {
           swipeStatus: (event, phase, direction, distance) =>
             if direction == 'up' or direction == 'down'
