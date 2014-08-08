@@ -283,7 +283,7 @@ On the [demo page](http://straydogstudio.github.io/film_roll/) the second carous
 
 #### Responsive images
 
-You can use `film_roll:resizing` to cause the carousel to be more responsive. `film_roll:resizing` happens before the size of all children are set so you can prepare the children for display. This is a coffeescript function, and it resizes the height of all images to match the height of the image inside a span with the "banner" class, which is designed to be full width:
+You can use `film_roll:resizing` to cause the carousel to be more responsive. `film_roll:resizing` happens before the size of all children are set so you can prepare the children for display. This is a coffeescript function, and it configures the carousel to resizes the height of all `span.resize img` images to match the height of the `span.banner img` image, which is designed to be full width:
 
 ```coffeescript
   configureCarouselSecondaryImages: ->
@@ -294,7 +294,7 @@ You can use `film_roll:resizing` to cause the carousel to be more responsive. `f
         $carousel.find('span.resize img').height('').height $banner.height()
 ```
 
-In this way you can force all elements to be the same height as the element you specify, no matter what their relative sizes. The banner image can adjust itself to the window of the device (using CSS and `max-width: 100%`), and the rest of the images can adjust to it. [Google for responsive images to learn more about it](https://www.google.com/search?q=responsive+images+max-width).
+Since `film_roll:resizing` is called when the page loads *and* when the page resizes, this forces all images to be the same height as the banner image, no matter what their relative sizes. The banner image can adjust itself to the window of the device (using CSS and `max-width: 100%`), and the rest of the images can adjust to it. [Google for responsive images to learn more about it](https://www.google.com/search?q=responsive+images+max-width).
 
 ## Default CSS
 
