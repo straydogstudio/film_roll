@@ -248,6 +248,8 @@ FilmRoll provides the following callbacks. Unless otherwise noted, all events ar
 - **film_roll:resized**: When the FilmRoll has been resized.
 - **film_roll:activate**: When a child element is activated. Triggered on the child.
 
+**Note**: The callback name _includes_ the `film_roll:` prefix. E.g. use `film_roll:dom_ready`, _NOT_ `dom_ready`.
+
 ### Examples
 
 These callbacks are there to let you do most anything. Here are a few examples:
