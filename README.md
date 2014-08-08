@@ -218,7 +218,7 @@ FilmRoll must have a specific width for all child elements to center a given ite
 You can take advantage of this in a few ways:
 
 * If you have varying widths, and the heights end up changing in a mobile format, use CSS to force the height of all children. 
-* Use one 'banner' child to resize all other children to the same height by calling javascript on the `film_roll:resizing` event.
+* Use one 'banner' child to resize all other children to the same height by calling javascript on the `film_roll:resizing` callback. See [callback examples below](#callbacks).
 
 ## Using Javascript
 
@@ -247,6 +247,52 @@ FilmRoll provides the following callbacks. Unless otherwise noted, all events ar
 - **film_roll:resizing**: Before FilmRoll measures the size of all content. The shuttle div is given the class `film_roll_resizing` during measurement. Called when the page has been loaded *and* when the page resizes. 
 - **film_roll:resized**: When the FilmRoll has been resized.
 - **film_roll:activate**: When a child element is activated. Triggered on the child.
+
+### Examples
+
+These callbacks are there to let you do most anything. Here are a few examples:
+
+#### Counter
+
+With the following code, a counter is updated to display the slide per children when each move is finished:
+
+```html
+<div id="some_counter_div"></div>
+```
+
+```javascript
+var film_roll = new FilmRoll({container: '#container_id',...});
+$('#container_id').on('film_roll:moved', function(event) {
+    $('#some_counter_div').html( (film_roll.index+1)+' / '+film_roll.children.length );
+});
+```
+
+#### Remove CSS early
+
+On the [demo page](http://straydogstudio.github.io/film_roll/) the second carousel uses CSS3 transformations to lean the pictures to the left or right when the class `moving_left` or `moving_right` is added so they look like they are flexing. But it looks really unnatural at the end without some help. To make it look more realistic, I use the `film_roll:moving` callback to set a timer that removes the class at 550ms instead of 1000ms:
+
+```javascript
+    $('#film_roll_2').on('film_roll:moving', function() {
+      setTimeout(function() {
+        $('#film_roll_2 div.film_roll_shuttle').removeClass('moving_left moving_right');
+      }, 550);
+    }); 
+```
+
+#### Responsive images
+
+You can use `film_roll:resizing` to cause the carousel to be more responsive. `film_roll:resizing` happens before the size of all children are set so you can prepare the children for display. This is a coffeescript function, and it resizes the height of all images to match the height of the image inside a span with the "banner" class, which is designed to be full width:
+
+```coffeescript
+  configureCarouselSecondaryImages: ->
+    $carousel = $ 'div.carousel'
+    $banner = $carousel.find('span.banner img')
+    if $banner
+      $carousel.on 'film_roll:resizing', ->
+        $carousel.find('span.resize img').height('').height $banner.height()
+```
+
+In this way you can force all elements to be the same height as the element you specify, no matter what their relative sizes. The banner image can adjust itself to the window of the device (using CSS and `max-width: 100%`), and the rest of the images can adjust to it. [Google for responsive images to learn more about it](https://www.google.com/search?q=responsive+images+max-width).
 
 ## Default CSS
 
