@@ -38,7 +38,7 @@ To do so, include the following minimal markup, unless you are using the complet
 
 - Examples for:
     - Responsive images
-    - CSS animtaions (2D and 3D)
+    - CSS animations (2D and 3D)
 - Simple external links
 
 ##Usage
