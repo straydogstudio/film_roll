@@ -4,3 +4,5 @@
 *.noie.coffee
 *.codekit
 tmp
+/node_modules
+/.project
