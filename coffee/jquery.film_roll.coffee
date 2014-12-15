@@ -1,6 +1,6 @@
 ###
   FilmRoll (for jQuery)
-  version: 0.1.12 (7/21/14)
+  version: 0.1.13 (12/15/14)
   @requires $ >= v1.4
 
   By Noel Peden
@@ -10,7 +10,7 @@
     http://www.opensource.org/licenses/mit-license.php
 
   Usage:
-    var film_troll = new FilmRoll({container: '#container_id', OPTIONS});
+    var film_roll = new FilmRoll({container: '#container_id', OPTIONS});
 ###
 ( ($) ->
 
@@ -98,7 +98,7 @@
         @mouse_catcher.appendTo(@wrapper).mousemove () =>
           @hover_in()
           @mouse_catcher.remove()
-        
+
       # set classes and get rotation
       first_child = null
       @children.each (i,e) =>
@@ -108,20 +108,24 @@
         @rotation.push e
 
       # config left / right buttons
-      if @options.prev && @options.next
-        @prev = $ @options.prev
-        @next = $ @options.next
-      else
-        @wrapper.append '<a class="film_roll_prev" href="#">&lsaquo;</a>'
-        @wrapper.append '<a class="film_roll_next" href="#">&rsaquo;</a>'
-        @prev = @div.find '.film_roll_prev'
-        @next = @div.find '.film_roll_next'
-
-      # add events for next prev
-      @prev.click =>
-        @moveRight()
-      @next.click =>
-        @moveLeft()
+      unless @options.prev is false
+        if @options.prev && @options.next
+          @prev = $ @options.prev
+        else
+          @wrapper.append '<a class="film_roll_prev" href="#">&lsaquo;</a>'
+          @prev = @div.find '.film_roll_prev'
+        # add events for next prev
+        @prev.click =>
+          @moveRight()
+      unless @options.next is false
+        if @options.next
+          @next = $ @options.next
+        else
+          @wrapper.append '<a class="film_roll_next" href="#">&rsaquo;</a>'
+          @next = @div.find '.film_roll_next'
+        # add events for next prev
+        @next.click =>
+          @moveLeft()
 
       # set start index
       @index = @options.start_index || 0

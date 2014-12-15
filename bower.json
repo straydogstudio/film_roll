@@ -1,6 +1,6 @@
 {
   "name": "FilmRoll",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "main": "js/jquery.film_roll.min.js",
   "ignore": [
     "coffee",

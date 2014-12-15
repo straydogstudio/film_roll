@@ -127,10 +127,10 @@ Options:
     - **'+Integer'**: Set the min-height to the highest child plus this integer value.
 - **:hover**: If true, pause scroll on hover. If false, ignore hover. If 'scroll', scroll the carousel on hover. True by default.
 - **:interval**: The automatic scroll interval. 4 seconds by default. To turn off the automatic scroll, see the **scroll** option.
-- **:next**: The jquery selector for the next button. Creates its own button by default. (See **prev** option.)
+- **:next**: The jquery selector for the next button. Creates its own button by default. Use false for nothing. (See **prev** option.)
 - **:no_css**: Do not add [default css](#default-css) to page. You will want to include it otherwise.
 - **:pager**: Display pagination dots at the bottom of the carousel. True by default.
-- **:prev**: The jquery selector for the previous button. Creates its own button by default. (See **next** option.)
+- **:prev**: The jquery selector for the previous button. Creates its own button by default. Use false for nothing. (See **next** option.)
 - **:resize**: Re-center the carousel on window resize. True by default. Set to false to perform your own logic before calling `film_roll_variable.resize();`.
 - **:scroll**: Automatically scroll the carousel. True by default.
 - **:shuttle_width**: The starting shuttle width until the page loads. Defaults to 10000. See [troubleshooting](#double-rows-on-start-shuttle-width).
@@ -283,15 +283,15 @@ On the [demo page](http://straydogstudio.github.io/film_roll/) the second carous
 
 #### Responsive images
 
-You can use `film_roll:resizing` to cause the carousel to be more responsive. `film_roll:resizing` happens before the size of all children are set so you can prepare the children for display. This is a coffeescript function, and it configures the carousel to resizes the height of all `span.resize img` images to match the height of the `span.banner img` image, which is designed to be full width:
+You can use `film_roll:resizing` to cause the carousel to be more responsive. `film_roll:resizing` happens before the size of all children are set so you can prepare the children for display. This is a coffeescript function, and it configures the carousel to resizes the height of all `img.resize` images to match the height of the `img.banner` image, which is designed to be full width:
 
 ```coffeescript
   configureCarouselSecondaryImages: ->
     $carousel = $ 'div.carousel'
-    $banner = $carousel.find('span.banner img')
+    $banner = $carousel.find('img.banner')
     if $banner
       $carousel.on 'film_roll:resizing', ->
-        $carousel.find('span.resize img').height('').height $banner.height()
+        $carousel.find('img.resize').height('').height $banner.height()
 ```
 
 Since `film_roll:resizing` is called when the page loads *and* when the page resizes, this forces all images to be the same height as the banner image, no matter what their relative sizes. The banner image can adjust itself to the window of the device (using CSS and `max-width: 100%`), and the rest of the images can adjust to it. [Google for responsive images to learn more about it](https://www.google.com/search?q=responsive+images+max-width).
@@ -430,6 +430,7 @@ jQuery does not measure the box shadow when it measures the height of child elem
 
 ##Changelog
 
+- **0.1.13:** (12/15/14) Allow no prev/next buttons
 - **0.1.12:** (7/18/14) Bower support
 - **0.1.11:** (7/18/14) Swipe movement, height padding
 - **0.1.10:** (7/18/14) Fix $.width change
