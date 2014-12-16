@@ -120,9 +120,9 @@ Options:
 
 - **:animation**: The slide animation duration. 1/4 of interval by default. (See **interval** option.)
 - **:configure_load**: Change how widths and hover response is configured. Options are:
-    - **false** (default) Configure widths/hover on the window load event. FilmRoll assumes it has been instantiated on DOM ready ([jQuery.ready()](http://api.jquery.com/ready/)) and it will schedule its width configuration to run on page load.
+    - **false** (default) Configure widths/hover on the window load event. FilmRoll assumes it has been instantiated on DOM ready ([jQuery.ready()](http://api.jquery.com/ready/).)
     - **true**: Configure widths/hover immediately (use if instantiating FilmRoll with the page load event)
-    - **function**: Call the function instead of configureLoad (use to adjust content before calling configureLoad manually)
+    - **function**: Call the function instead of `configureLoad` (use to adjust content before calling `configureLoad` manually)
     - **integer**: Delay the call to `configureLoad` by the provided number of milliseconds (content may or may not be ready!)
 - **:easing**: `swing` by default. jQuery also provides `linear`. [jQueryUI](http://api.jqueryui.com/easings/) provides more.
 - **:height**: Set the height of the film_roll wrapper (which sits inside the container.) Options are:
