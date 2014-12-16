@@ -119,7 +119,11 @@ Params:
 Options:
 
 - **:animation**: The slide animation duration. 1/4 of interval by default. (See **interval** option.)
-- **:configure_load**: If true, configure widths immediately (use if instantiating FilmRoll with the page load event.) If false, configure width on the window load event. If a function, immediately call the function. False by default. Without this option FilmRoll assumes it has been instantiated on DOM ready ([jQuery.ready()](http://api.jquery.com/ready/)) and it will schedule its width configuration to run on page load. 
+- **:configure_load**: Change how widths and hover response is configured. Options are:
+    - **false** (default) Configure widths/hover on the window load event. FilmRoll assumes it has been instantiated on DOM ready ([jQuery.ready()](http://api.jquery.com/ready/)) and it will schedule its width configuration to run on page load.
+    - **true**: Configure widths/hover immediately (use if instantiating FilmRoll with the page load event)
+    - **function**: Call the function instead of configureLoad (use to adjust content before calling configureLoad manually)
+    - **integer**: Delay the call to `configureLoad` by the provided number of milliseconds (content may or may not be ready!)
 - **:easing**: `swing` by default. jQuery also provides `linear`. [jQueryUI](http://api.jqueryui.com/easings/) provides more.
 - **:height**: Set the height of the film_roll wrapper (which sits inside the container.) Options are:
     - **Not set** (default): The wrapper will be the height of the container (100%), with a min-height of the tallest element.
@@ -402,6 +406,21 @@ Add it to your own css and disable with `no_css: true` when calling FilmRoll to 
 
 ##Troubleshooting
 
+###Loading Failure (e.g. on iOS 8)
+
+FilmRoll needs to measure the size of all elements to function. As a result, it is not completely configured until page load. If any other script fails or times out it could cause FilmRoll to fail. iOS 8 in particular is brittle in this regard. (In one instance Vimeo failed to load and caused FilmRoll to fail.) Use developer tools to watch your resources loading. Look for any failures. 
+
+You can delay `film_roll.configureLoad` with a timeout by passing in an integer to the configure_load option:
+
+```javascript
+var film_roll = new FilmRoll({
+  container: '#container_id',
+  configure_load: 50
+});
+```
+
+This will call `film_roll.configureLoad()` 50 milliseconds after the film roll is instantiated. _This may or may not mean the assets are ready!_
+
 ###Large images or slow loading pages
 
 If you have a heavy set of images, the gallery can look empty while it loads. You can either style the child element to have an appropriate background (e.g. a gradient) while it is waiting, or you can use javascript to load high res pics later. E.g. populate your gallery with placeholder images and use [jQuery Lazyload](https://github.com/tuupola/jquery_lazyload) to load the images after the page loads. 
@@ -430,6 +449,7 @@ jQuery does not measure the box shadow when it measures the height of child elem
 
 ##Changelog
 
+- **0.1.14:** (12/16/14) Millisecond delay option for configureLoad
 - **0.1.13:** (12/15/14) Allow no prev/next buttons
 - **0.1.12:** (7/18/14) Bower support
 - **0.1.11:** (7/18/14) Swipe movement, height padding

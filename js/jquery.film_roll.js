@@ -1,7 +1,7 @@
 
 /*
   FilmRoll (for jQuery)
-  version: 0.1.13 (12/15/14)
+  version: 0.1.14 (12/16/14)
   @requires $ >= v1.4
 
   By Noel Peden
@@ -158,6 +158,12 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
       if (this.options.configure_load) {
         if (typeof this.options.configure_load === 'function') {
           this.options.configure_load.apply(this, arguments);
+        } else if (typeof this.options.configure_load === 'number') {
+          setTimeout((function(_this) {
+            return function() {
+              return _this.configureLoad();
+            };
+          })(this), this.options.configure_load);
         } else {
           this.configureLoad();
         }
