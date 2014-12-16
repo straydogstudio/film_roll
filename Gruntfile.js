@@ -14,7 +14,8 @@ module.exports = function(grunt) {
     uglify: {
       js: {
         files: {
-          'js/jquery.film_roll.min.js': 'js/jquery.film_roll.js'
+          'js/jquery.film_roll.min.js': 'js/jquery.film_roll.js',
+          '../film_roll_page/js/jquery.film_roll.min.js': 'js/jquery.film_roll.js'
         }
       }
     },
