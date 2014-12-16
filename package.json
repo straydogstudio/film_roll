@@ -1,7 +1,7 @@
 {
   "name": "FilmRoll",
   "title": "FilmRoll carousel",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "repository": {
     "type": "git",
     "url": "git://github.com/straydogstudio/film_roll.git"
