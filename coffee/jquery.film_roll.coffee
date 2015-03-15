@@ -1,6 +1,6 @@
 ###
   FilmRoll (for jQuery)
-  version: 0.1.14 (12/16/14)
+  version: 0.1.15 (3/15/15)
   @requires $ >= v1.4
 
   By Noel Peden
@@ -32,7 +32,7 @@
       @rotation = []
 
       # set height and temporary width
-      @shuttle.width if @options.shuttle_width then parseInt(@options.shuttle_width,10) else 10000
+      @shuttle.width if @options.shuttle_width then parseInt(@options.shuttle_width, 10) else 10000
       if @options.start_height
         @wrapper.height parseInt(@options.start_height, 10)
 
@@ -61,7 +61,7 @@
       unless @options.pager is false
         @pager = $ '<div class="film_roll_pager">'
         @div.append @pager
-        @children.each (i,e) =>
+        @children.each (i, e) =>
           link = $("<a href='#' data-id='#{e.id}'><span>#{i+1}</span></a>")
           @pager.append link
           link.click =>
@@ -101,7 +101,7 @@
 
       # set classes and get rotation
       first_child = null
-      @children.each (i,e) =>
+      @children.each (i, e) =>
         $el = $(e)
         $el.attr 'data-film-roll-child-id', i
         $el.addClass "film_roll_child"
@@ -166,6 +166,7 @@
 
     cancelClick: (event) ->
       if $(this).hasClass 'fr-no-click'
+        # $this.closest('.film_roll_wrapper').find('a.fr-no-click').removeClass('fr-no-click')
         event.preventDefault()
         return false
       return true
@@ -223,7 +224,7 @@
                 @clearScroll()
               @active_half = @child_widths[@index]/2
               rotation_index = $.inArray @children[@index], @rotation
-              @offscreen_left = parseInt(@shuttle.css('left'),10)
+              @offscreen_left = parseInt(@shuttle.css('left'), 10)
               @offscreen_right = @marginRight(rotation_index) - (wrapper_width - @child_widths[@index])/2
               @div.find('a').addClass 'fr-no-click'
             else if phase == 'move'
@@ -257,6 +258,7 @@
                 @moveToIndex(@index, direction)
               else if phase == 'cancel'
                 @moveToIndex(@index, (if direction == 'right' then 'left' else 'right'))
+                @div.find('a.fr-no-click').removeClass 'fr-no-click'
               if @was_scrolled
                 @configureScroll()
             true
@@ -283,7 +285,7 @@
         @options.height = null
       else
         @options.height_padding = 0
-      @children.each (i,e) =>
+      @children.each (i, e) =>
         $el = $(e)
         $el.width $el.outerWidth(true)
         #Sometimes $.width changes the value, so we get it again

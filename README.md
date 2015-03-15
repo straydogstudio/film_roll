@@ -28,10 +28,10 @@ jQuery's animation tends to cause high cpu load. The best solution for this is t
 To do so, include the following minimal markup, unless you are using the complete library:
 
 ```html
-<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.12.1/plugins/CSSPlugin.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.12.1/easing/EasePack.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.12.1/TweenLite.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.12.1/jquery.gsap.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/plugins/CSSPlugin.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/easing/EasePack.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenLite.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/jquery.gsap.min.js"></script>
 ```
 
 ##In The Works
@@ -449,6 +449,7 @@ jQuery does not measure the box shadow when it measures the height of child elem
 
 ##Changelog
 
+- **0.1.15:** (3/15/15) Prevent TouchSwipe link block
 - **0.1.14:** (12/16/14) Millisecond delay option for configureLoad
 - **0.1.13:** (12/15/14) Allow no prev/next buttons
 - **0.1.12:** (7/18/14) Bower support
@@ -477,4 +478,4 @@ coffee -wc -o js/ coffee/*.coffee
 
 ##Authors, License and Stuff
 
-Code by [Noel Peden](http://straydogstudio.com) from [Northwood Manufacturing](http://northwoodmfg.com) and released under [MIT license](http://www.opensource.org/licenses/mit-license.php).
+Code by [Noel Peden](http://straydogstudio.com) and released under [MIT license](http://www.opensource.org/licenses/mit-license.php).
