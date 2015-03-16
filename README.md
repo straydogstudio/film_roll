@@ -10,6 +10,10 @@
 
 ---
 
+##UPDATE
+
+* The recent TouchSwipe support disabled all links inside the carousel. This has now been fixed in [0.1.15](https://github.com/straydogstudio/film_roll/releases). Thanks to [EmrahAkdeniz](https://github.com/EmrahAkdeniz) for reporting it.
+
 ##Features
 
 - Centers one item at a time in the view
