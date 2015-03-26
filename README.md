@@ -149,6 +149,17 @@ Options:
 ###Examples
 View the [project page for working examples](http://straydogstudio.github.io/film_roll).
 
+###Click to Center
+
+If you want to center an item when someone clicks on it, try this:
+
+```javascript
+var film_roll = new FilmRoll({ container: '#container_id', ... });
+$('#container_id div.film_roll_child').on('click',function() {
+  film_roll.moveToChild(this);
+});
+```
+
 ###On load vs. dom:loaded
 
 FilmRoll is written to be called on dom:ready. It inserts all markup before display and configures itself to resize itself once the content is loaded (after the window.load event) because **it must have content to center an item on the page**.
