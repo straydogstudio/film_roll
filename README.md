@@ -10,6 +10,10 @@
 
 ---
 
+##UPDATE
+
+* The recent TouchSwipe support disabled all links inside the carousel. This has now been fixed in [0.1.15](https://github.com/straydogstudio/film_roll/releases). Thanks to [EmrahAkdeniz](https://github.com/EmrahAkdeniz) for reporting it.
+
 ##Features
 
 - Centers one item at a time in the view
@@ -144,6 +148,17 @@ Options:
 
 ###Examples
 View the [project page for working examples](http://straydogstudio.github.io/film_roll).
+
+###Click to Center
+
+If you want to center an item when someone clicks on it, try this:
+
+```javascript
+var film_roll = new FilmRoll({ container: '#container_id', ... });
+$('#container_id div.film_roll_child').on('click',function() {
+  film_roll.moveToChild(this);
+});
+```
 
 ###On load vs. dom:loaded
 
