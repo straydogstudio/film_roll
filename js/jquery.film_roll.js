@@ -362,6 +362,21 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
       }
       this.real_width = this.width;
       this.shuttle.width(this.real_width * 2).removeClass('film_roll_resizing').addClass('film_roll_shuttle');
+      if (this.wrapper.width() > this.real_width) {
+        if (!(this.options.force_buttons || this.options.prev === false)) {
+          this.prev.hide();
+        }
+        if (!(this.options.force_buttons || this.options.next === false)) {
+          this.next.hide();
+        }
+      } else {
+        if (this.options.prev !== false) {
+          this.prev.show();
+        }
+        if (this.options.next !== false) {
+          this.next.show();
+        }
+      }
       return this;
     };
 

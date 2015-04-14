@@ -311,6 +311,18 @@
       # double the width to take care of any styling and rotation
       @shuttle.width(@real_width * 2).removeClass('film_roll_resizing').addClass 'film_roll_shuttle'
 
+      # hide prev/next if less than visible width
+      if @wrapper.width() > @real_width
+        unless @options.force_buttons || @options.prev is false
+          @prev.hide()
+        unless @options.force_buttons || @options.next is false
+          @next.hide()
+      else
+        unless @options.prev is false
+          @prev.show()
+        unless @options.next is false
+          @next.show()
+
       this
 
     rotationIndex: (child) ->
