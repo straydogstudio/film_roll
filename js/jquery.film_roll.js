@@ -19,6 +19,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 (function($) {
   this.FilmRoll = (function() {
     function FilmRoll(_at_options) {
+      var inst;
       this.options = _at_options != null ? _at_options : {};
       this.rotateRight = __bind(this.rotateRight, this);
       this.rotateLeft = __bind(this.rotateLeft, this);
@@ -34,7 +35,13 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
       if (this.options.container) {
         this.div = $(this.options.container);
         if (this.div.length) {
-          this.configure();
+          inst = this.div.data('film_roll_instance');
+          if (inst) {
+            return inst;
+          }
+          inst = this.configure();
+          this.div.data('film_roll_instance', inst);
+          return inst;
         }
       }
     }

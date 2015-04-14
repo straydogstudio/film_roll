@@ -20,7 +20,12 @@
       if @options.container
         @div = $ @options.container
         if @div.length
-          @configure()
+          inst = @div.data 'film_roll_instance'
+          if inst
+            return inst
+          inst = @configure()
+          @div.data 'film_roll_instance', inst
+          return inst
 
     configure: ->
       # create divs for absolute positioning
