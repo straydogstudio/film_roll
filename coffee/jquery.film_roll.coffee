@@ -130,6 +130,9 @@
       # set start index
       @index = @options.start_index || 0
 
+      # set pixel offset
+      @offset = @options.offset || 0
+
       # scroll variables
       @interval = @options.interval || 4000
       @animation = @options.animation || @interval/4
@@ -360,10 +363,14 @@
       $(@pager_links[index]).addClass 'active'
       # if shuttle width is wider than the wrapper, we need to rotate
       wrapper_width = @wrapper.width()
-      if wrapper_width < @real_width && @children.length > 1 # rotate if the children are wider than the container
-        # first, where is this photo?
-        # what should show on either side of this child
-        visible_margin = (wrapper_width - @child_widths[index])/2
+      # what should show on either side of this child
+      if @options.position == 'left'
+        visible_margin = 0 + @offset
+      else if @options.position == 'right'
+        visible_margin = wrapper_width - @child_widths[index] + @offset
+      else # center
+        visible_margin = (wrapper_width - @child_widths[index])/2 + @offset
+      if wrapper_width < @real_width && @children.length > 1 || @options.force_rotate # rotate if the children are wider than the container
         if direction == 'right'
           # rotate so blank space won't show after animation
           while rotation_index == 0 or @marginLeft(rotation_index) < visible_margin
@@ -374,19 +381,19 @@
           while rotation_index == @children.length - 1 or @marginRight(rotation_index) < visible_margin
             @rotateLeft()
             rotation_index = $.inArray child, @rotation
-        new_left_margin = -1*(@marginLeft(rotation_index)-visible_margin)
-        if animate
-          direction_class = "moving_#{direction}"
-          @shuttle.addClass direction_class
-          @div.trigger $.Event("film_roll:moving")
-          @shuttle.stop().animate { 'left': new_left_margin }, @animation, @easing, =>
-            @shuttle.removeClass direction_class
-            @div.trigger $.Event("film_roll:moved")
-        else
-          @shuttle.css 'left', new_left_margin
+      new_left_margin = -1*(@marginLeft(rotation_index)-visible_margin)
+      if animate
+        direction_class = "moving_#{direction}"
+        @shuttle.addClass direction_class
+        @div.trigger $.Event("film_roll:moving")
+        @shuttle.stop().animate { 'left': new_left_margin }, @animation, @easing, =>
+          @shuttle.removeClass direction_class
           @div.trigger $.Event("film_roll:moved")
       else
-        @shuttle.css 'left', (wrapper_width - @width)/2
+        @shuttle.css 'left', new_left_margin
+        @div.trigger $.Event("film_roll:moved")
+      # else
+        # @shuttle.css 'left', (wrapper_width - @width)/2
       if scrolled
         @configureScroll()
       this

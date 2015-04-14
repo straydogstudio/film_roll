@@ -146,6 +146,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
         })(this));
       }
       this.index = this.options.start_index || 0;
+      this.offset = this.options.offset || 0;
       this.interval = this.options.interval || 4000;
       this.animation = this.options.animation || this.interval / 4;
       this.easing = this.options.easing || FilmRoll.default_easing;
@@ -436,8 +437,14 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
       this.pager_links.removeClass('active');
       $(this.pager_links[index]).addClass('active');
       wrapper_width = this.wrapper.width();
-      if (wrapper_width < this.real_width && this.children.length > 1) {
-        visible_margin = (wrapper_width - this.child_widths[index]) / 2;
+      if (this.options.position === 'left') {
+        visible_margin = 0 + this.offset;
+      } else if (this.options.position === 'right') {
+        visible_margin = wrapper_width - this.child_widths[index] + this.offset;
+      } else {
+        visible_margin = (wrapper_width - this.child_widths[index]) / 2 + this.offset;
+      }
+      if (wrapper_width < this.real_width && this.children.length > 1 || this.options.force_rotate) {
         if (direction === 'right') {
           while (rotation_index === 0 || this.marginLeft(rotation_index) < visible_margin) {
             this.rotateRight();
@@ -449,25 +456,23 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
             rotation_index = $.inArray(child, this.rotation);
           }
         }
-        new_left_margin = -1 * (this.marginLeft(rotation_index) - visible_margin);
-        if (animate) {
-          direction_class = "moving_" + direction;
-          this.shuttle.addClass(direction_class);
-          this.div.trigger($.Event("film_roll:moving"));
-          this.shuttle.stop().animate({
-            'left': new_left_margin
-          }, this.animation, this.easing, (function(_this) {
-            return function() {
-              _this.shuttle.removeClass(direction_class);
-              return _this.div.trigger($.Event("film_roll:moved"));
-            };
-          })(this));
-        } else {
-          this.shuttle.css('left', new_left_margin);
-          this.div.trigger($.Event("film_roll:moved"));
-        }
+      }
+      new_left_margin = -1 * (this.marginLeft(rotation_index) - visible_margin);
+      if (animate) {
+        direction_class = "moving_" + direction;
+        this.shuttle.addClass(direction_class);
+        this.div.trigger($.Event("film_roll:moving"));
+        this.shuttle.stop().animate({
+          'left': new_left_margin
+        }, this.animation, this.easing, (function(_this) {
+          return function() {
+            _this.shuttle.removeClass(direction_class);
+            return _this.div.trigger($.Event("film_roll:moved"));
+          };
+        })(this));
       } else {
-        this.shuttle.css('left', (wrapper_width - this.width) / 2);
+        this.shuttle.css('left', new_left_margin);
+        this.div.trigger($.Event("film_roll:moved"));
       }
       if (scrolled) {
         this.configureScroll();
