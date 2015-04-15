@@ -442,7 +442,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
     };
 
     FilmRoll.prototype.moveToIndex = function(index, direction, animate) {
-      var child, direction_class, new_left_margin, rotation_index, scrolled, visible_margin, wrapper_width;
+      var child, direction_class, new_left_margin, remainder, rotation_index, scrolled, visible_margin_left, visible_margin_right, wrapper_width;
       if (animate == null) {
         animate = true;
       }
@@ -459,27 +459,29 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
       this.pager_links.removeClass('active');
       $(this.pager_links[index]).addClass('active');
       wrapper_width = this.wrapper.width();
+      remainder = wrapper_width - this.child_widths[index];
       if (this.options.position === 'left') {
-        visible_margin = 0 + this.offset;
+        visible_margin_left = 0 + this.offset;
       } else if (this.options.position === 'right') {
-        visible_margin = wrapper_width - this.child_widths[index] + this.offset;
+        visible_margin_left = wrapper_width - this.child_widths[index] + this.offset;
       } else {
-        visible_margin = (wrapper_width - this.child_widths[index]) / 2 + this.offset;
+        visible_margin_left = remainder / 2 + this.offset;
       }
+      visible_margin_right = remainder - visible_margin_left;
       if (wrapper_width < this.real_width && this.children.length > 1 || this.options.force_rotate) {
         if (direction === 'right') {
-          while (rotation_index === 0 || this.marginLeft(rotation_index) < visible_margin) {
+          while (rotation_index === 0 || this.marginLeft(rotation_index) < visible_margin_left) {
             this.rotateRight();
             rotation_index = $.inArray(child, this.rotation);
           }
         } else {
-          while (rotation_index === this.children.length - 1 || this.marginRight(rotation_index) < visible_margin) {
+          while (rotation_index === this.children.length - 1 || this.marginRight(rotation_index) < visible_margin_right) {
             this.rotateLeft();
             rotation_index = $.inArray(child, this.rotation);
           }
         }
       }
-      new_left_margin = -1 * (this.marginLeft(rotation_index) - visible_margin);
+      new_left_margin = -1 * (this.marginLeft(rotation_index) - visible_margin_left);
       if (animate) {
         direction_class = "moving_" + direction;
         this.shuttle.addClass(direction_class);

@@ -381,24 +381,26 @@
       # if shuttle width is wider than the wrapper, we need to rotate
       wrapper_width = @wrapper.width()
       # what should show on either side of this child
+      remainder = (wrapper_width - @child_widths[index])
       if @options.position == 'left'
-        visible_margin = 0 + @offset
+        visible_margin_left = 0 + @offset
       else if @options.position == 'right'
-        visible_margin = wrapper_width - @child_widths[index] + @offset
+        visible_margin_left = wrapper_width - @child_widths[index] + @offset
       else # center
-        visible_margin = (wrapper_width - @child_widths[index])/2 + @offset
+        visible_margin_left = remainder/2 + @offset
+      visible_margin_right = remainder - visible_margin_left
       if wrapper_width < @real_width && @children.length > 1 || @options.force_rotate # rotate if the children are wider than the container
         if direction == 'right'
           # rotate so blank space won't show after animation
-          while rotation_index == 0 or @marginLeft(rotation_index) < visible_margin
+          while rotation_index == 0 or @marginLeft(rotation_index) < visible_margin_left
             @rotateRight()
             rotation_index = $.inArray child, @rotation
         else # we are moving left
           # rotate so blank space won't show after animation
-          while rotation_index == @children.length - 1 or @marginRight(rotation_index) < visible_margin
+          while rotation_index == @children.length - 1 or @marginRight(rotation_index) < visible_margin_right
             @rotateLeft()
             rotation_index = $.inArray child, @rotation
-      new_left_margin = -1*(@marginLeft(rotation_index)-visible_margin)
+      new_left_margin = -1*(@marginLeft(rotation_index)-visible_margin_left)
       if animate
         direction_class = "moving_#{direction}"
         @shuttle.addClass direction_class
