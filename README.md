@@ -42,13 +42,6 @@ To do so, include the following minimal markup, unless you are using the complet
 <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/jquery.gsap.min.js"></script>
 ```
 
-##In The Works
-
-- Examples for:
-    - Responsive images
-    - CSS animations (2D and 3D)
-- Simple external links
-
 ##Usage
 
 ###Installation
@@ -125,6 +118,10 @@ Params:
 - **:container** (Mandatory): The div that contains all elements that are to be displayed.
 
 Typical Options:
+- **:height**: Set the height of the film_roll wrapper (which sits inside the container.) Options are:
+    - **Not set** (default): The wrapper will be the height of the container (100%), with a min-height of the tallest element.
+    - **Integer/string**: Set the height directly. Can be an integer (pixels) or a string ('75%'.)
+    - **'+Integer'**: Set the min-height to the highest child plus this integer value.
 - **:interval**: The automatic scroll interval. 4 seconds by default. To turn off the automatic scroll, see the **scroll** option.
 - **:next**: The jquery selector for the next button. Creates its own button by default. Use false for nothing. (See **prev** option.)
 - **:pager**: Display pagination dots at the bottom of the carousel. True by default.
@@ -143,10 +140,6 @@ Other Options:
 - **:easing**: `swing` by default. jQuery also provides `linear`. [jQueryUI](http://api.jqueryui.com/easings/) provides more.
 - **:force_buttons**: Show previous and next buttons even if the carousel is smaller than the container. Defaults to false.
 - **:force_rotate**: Rotate child elements even if the carousel is smaller than the container. Defaults to false.
-- **:height**: Set the height of the film_roll wrapper (which sits inside the container.) Options are:
-    - **Not set** (default): The wrapper will be the height of the container (100%), with a min-height of the tallest element.
-    - **Integer/string**: Set the height directly. Can be an integer (pixels) or a string ('75%'.)
-    - **'+Integer'**: Set the min-height to the highest child plus this integer value.
 - **:hover**: If true, pause scroll on hover. If false, ignore hover. If 'scroll', scroll the carousel on hover. True by default.
 - **:no_css**: Do not add [default css](#default-css) to page. You will want to include it otherwise.
 - **:offset**: Offset the selected item position by given pixels. Positive to move right, negative to move left.
@@ -156,7 +149,10 @@ Other Options:
 - **:start_index**: The index of the first element to center
 - **:vertical_center**: Center children vertically in the container. Requires a browser with **:before** CSS pseudo class support. This is useful for a full screen carousel.
 
-###Examples
+##Examples
+
+### View the Project Page
+
 View the [project page for working examples](http://straydogstudio.github.io/film_roll).
 
 ###Click to Center
@@ -170,44 +166,22 @@ $('#container_id div.film_roll_child').on('click',function() {
 });
 ```
 
-###On load vs. dom:loaded
+### External Javascript Links
 
-FilmRoll is written to be called on dom:ready. It inserts all markup before display and configures itself to resize itself once the content is loaded (after the window.load event) because **it must have content to center an item on the page**.
-
-If, for some reason, you need to call FilmRoll on window.load, or create it using an in page script, pass in the `configure_load: true` option to immediately call the relevant code:
+If you wish to move to a specific child using external javascript, use the `moveToIndex` or `moveToChild` functions:
 
 ```javascript
-var film_roll = new FilmRoll({
-    configure_load: true,
-    container: '#container_id',
-  });
+var film_roll = new FilmRoll(...);
+
+$('#some_link_selector').click(function() {
+  film_roll.moveToIndex(3);
+  //or
+  //film_roll.moveToChild($('#some_child_selector'));
+  return false;
+})
 ```
 
-###Styling
-
-FilmRoll takes the following markup:
-
-```html
-  <div id="id_or_class_for_selection">
-    <div>...</div>
-    <div>...</div>
-  </div>
-```
-
-and wraps all children with two divs, adds the class `film_roll_child` and a style element to the children, and adds the 'active' class to the centered child:
-
-```html
-  <div id="id_or_class_for_selection">
-    <div class="film_roll_wrapper">
-      <div class="film_roll_shuttle">
-        <div class="film_roll_child active">…</div>
-        <div class="film_roll_child">…</div>
-      </div>
-    </div>
-  </div>
-```
-
-Use these classes to apply styling and effects. See the [example page](http://straydogstudio.github.io/film_roll).
+Note that `moveToIndex` uses a **zero based index**. E.g. if you have four items, the last item is 3.
 
 ### Full Screen usage
 
@@ -240,7 +214,48 @@ var film_roll = new FilmRoll({
 
 See an [example here](http://straydogstudio.github.io/film_roll/fullscreen.html).
 
-## Responsive Images
+###Styling
+
+FilmRoll takes the following markup:
+
+```html
+  <div id="id_or_class_for_selection">
+    <div>...</div>
+    <div>...</div>
+  </div>
+```
+
+and wraps all children with two divs, adds the class `film_roll_child` and a style element to the children, and adds the 'active' class to the centered child:
+
+```html
+  <div id="id_or_class_for_selection">
+    <div class="film_roll_wrapper">
+      <div class="film_roll_shuttle">
+        <div class="film_roll_child active">…</div>
+        <div class="film_roll_child">…</div>
+      </div>
+    </div>
+  </div>
+```
+
+Use these classes to apply styling and effects. See the [example page](http://straydogstudio.github.io/film_roll).
+
+##Theory
+
+###On load vs. dom:loaded
+
+FilmRoll is written to be called on dom:ready. It inserts all markup before display and configures itself to resize itself once the content is loaded (after the window.load event) because **it must have content to center an item on the page**.
+
+If, for some reason, you need to call FilmRoll on window.load, or create it using an in page script, pass in the `configure_load: true` option to immediately call the relevant code:
+
+```javascript
+var film_roll = new FilmRoll({
+    configure_load: true,
+    container: '#container_id',
+  });
+```
+
+### Responsive Images
 
 FilmRoll must have a specific width for all child elements to center a given item. The question is, if the children have responsive sizes, what size should they be? To answer this question FilmRoll makes an assumption: the size of the child elements before all FilmRoll styling is applied is what they should be in the carousel. It will measure the child element widths, and fix them with inline styling.
 
@@ -248,23 +263,6 @@ You can take advantage of this in a few ways:
 
 * If you have varying widths, and the heights end up changing in a mobile format, use CSS to force the height of all children. 
 * Use one 'banner' child to resize all other children to the same height by calling javascript on the `film_roll:resizing` callback. See [callback examples below](#callbacks).
-
-## Using Javascript
-
-If you wish to move to a specific child using external javascript, use the `moveToIndex` or `moveToChild` functions:
-
-```javascript
-var film_roll = new FilmRoll(...);
-
-$('#some_link_selector').click(function() {
-  film_roll.moveToIndex(3);
-  //or
-  //film_roll.moveToChild($('#some_child_selector'));
-  return false;
-})
-```
-
-Note that `moveToIndex` uses a **zero based index**. E.g. if you have four items, the last item is 3.
 
 ## Callbacks
 
