@@ -1,6 +1,6 @@
 ###
   FilmRoll (for jQuery)
-  version: 0.1.15 (3/15/15)
+  version: 0.1.16 (4/13/15)
   @requires $ >= v1.4
 
   By Noel Peden

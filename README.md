@@ -12,7 +12,11 @@
 
 ##UPDATE
 
-* The recent TouchSwipe support disabled all links inside the carousel. This has now been fixed in [0.1.15](https://github.com/straydogstudio/film_roll/releases). Thanks to [EmrahAkdeniz](https://github.com/EmrahAkdeniz) for reporting it.
+* Two new features have been added:
+  - FilmRoll now supports positioning. You can specify a position of 'left', 'right', or 'center' (the default.) The active child element will be moved to the left, right, or center of the visible window. There is also an offset option which will bump the position left (negative) or right (positive) by the specified number of pixels if you need it. (4/13/2015)
+  - If the child elements are smaller than the visible window, they are now shuttled back and forth, but they are _NOT ROTATED_ unless the force_rotate option is specified (see the third carousel on the [demo page](http://straydogstudio.github.io/film_roll).) In addition, the previous / next buttons are hidden, unless the force_buttons option is specified. (4/13/2015)
+  - Thanks to [prashantsani](https://github.com/prashantsani) for asking for, clarifying, and testing these features.
+* The recent TouchSwipe support disabled all links inside the carousel. This has now been fixed in [0.1.15](https://github.com/straydogstudio/film_roll/releases). Thanks to [EmrahAkdeniz](https://github.com/EmrahAkdeniz) for reporting it. (3/15/2015)
 
 ##Features
 
@@ -120,7 +124,15 @@ Params:
 
 - **:container** (Mandatory): The div that contains all elements that are to be displayed.
 
-Options:
+Typical Options:
+- **:interval**: The automatic scroll interval. 4 seconds by default. To turn off the automatic scroll, see the **scroll** option.
+- **:next**: The jquery selector for the next button. Creates its own button by default. Use false for nothing. (See **prev** option.)
+- **:pager**: Display pagination dots at the bottom of the carousel. True by default.
+- **:position**: The position of the selected item within the container. Either 'left', 'right', or 'center'. Defaults to 'center'. See the **offset** option for further adjustment.
+- **:prev**: The jquery selector for the previous button. Creates its own button by default. Use false for nothing. (See **next** option.)
+- **:scroll**: Automatically scroll the carousel. True by default.
+
+Other Options:
 
 - **:animation**: The slide animation duration. 1/4 of interval by default. (See **interval** option.)
 - **:configure_load**: Change how widths and hover response is configured. Options are:
@@ -129,18 +141,16 @@ Options:
     - **function**: Call the function instead of `configureLoad` (use to adjust content before calling `configureLoad` manually)
     - **integer**: Delay the call to `configureLoad` by the provided number of milliseconds (content may or may not be ready!)
 - **:easing**: `swing` by default. jQuery also provides `linear`. [jQueryUI](http://api.jqueryui.com/easings/) provides more.
+- **:force_buttons**: Show previous and next buttons even if the carousel is smaller than the container. Defaults to false.
+- **:force_rotate**: Rotate child elements even if the carousel is smaller than the container. Defaults to false.
 - **:height**: Set the height of the film_roll wrapper (which sits inside the container.) Options are:
     - **Not set** (default): The wrapper will be the height of the container (100%), with a min-height of the tallest element.
     - **Integer/string**: Set the height directly. Can be an integer (pixels) or a string ('75%'.)
     - **'+Integer'**: Set the min-height to the highest child plus this integer value.
 - **:hover**: If true, pause scroll on hover. If false, ignore hover. If 'scroll', scroll the carousel on hover. True by default.
-- **:interval**: The automatic scroll interval. 4 seconds by default. To turn off the automatic scroll, see the **scroll** option.
-- **:next**: The jquery selector for the next button. Creates its own button by default. Use false for nothing. (See **prev** option.)
 - **:no_css**: Do not add [default css](#default-css) to page. You will want to include it otherwise.
-- **:pager**: Display pagination dots at the bottom of the carousel. True by default.
-- **:prev**: The jquery selector for the previous button. Creates its own button by default. Use false for nothing. (See **next** option.)
+- **:offset**: Offset the selected item position by given pixels. Positive to move right, negative to move left.
 - **:resize**: Re-center the carousel on window resize. True by default. Set to false to perform your own logic before calling `film_roll_variable.resize();`.
-- **:scroll**: Automatically scroll the carousel. True by default.
 - **:shuttle_width**: The starting shuttle width until the page loads. Defaults to 10000. See [troubleshooting](#double-rows-on-start-shuttle-width).
 - **:start_height**: A starting height to give the carousel. Use only if you are having content flashes.
 - **:start_index**: The index of the first element to center
@@ -269,11 +279,11 @@ FilmRoll provides the following callbacks. Unless otherwise noted, all events ar
 
 **Note**: The callback name _includes_ the `film_roll:` prefix. E.g. use `film_roll:dom_ready`, _NOT_ `dom_ready`.
 
-### Examples
+### Callback Examples
 
 These callbacks are there to let you do most anything. Here are a few examples:
 
-#### Counter
+#### Display a Counter
 
 With the following code, a counter is updated to display the slide per children when each move is finished:
 
@@ -464,6 +474,7 @@ jQuery does not measure the box shadow when it measures the height of child elem
 
 ##Changelog
 
+- **0.1.16:** (4/13/15) Position/offset, slide but no rotate for less than visible width, handle duplicate instances, force_buttons & force_rotate options
 - **0.1.15:** (3/15/15) Prevent TouchSwipe link block
 - **0.1.14:** (12/16/14) Millisecond delay option for configureLoad
 - **0.1.13:** (12/15/14) Allow no prev/next buttons
