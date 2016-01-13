@@ -2,7 +2,7 @@
 
 /*
   FilmRoll (for jQuery)
-  version: 0.1.16 (4/13/15)
+  version: 0.1.17 (1/13/16)
   @requires $ >= v1.4
 
   By Noel Peden
@@ -231,7 +231,9 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
 
     FilmRoll.prototype.configureLoad = function() {
       this.configureWidths();
-      this.moveToIndex(this.index, 'right', true);
+      if (this.options.move_on_start !== false) {
+        this.moveToIndex(this.index, 'right', true);
+      }
       if (this.options.hover === 'scroll') {
         this.options.scroll = false;
         return this.configureHover();

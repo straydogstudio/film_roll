@@ -1,6 +1,6 @@
 ###
   FilmRoll (for jQuery)
-  version: 0.1.16 (4/13/15)
+  version: 0.1.17 (1/13/16)
   @requires $ >= v1.4
 
   By Noel Peden
@@ -200,7 +200,8 @@
 
     configureLoad: =>
       @configureWidths()
-      @moveToIndex @index, 'right', true
+      unless @options.move_on_start is false
+        @moveToIndex @index, 'right', true
       if @options.hover == 'scroll'
         @options.scroll = false
         @configureHover()
