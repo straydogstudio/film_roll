@@ -150,6 +150,36 @@ Other Options:
 - **:start_index**: The index of the first element to center
 - **:vertical_center**: Center children vertically in the container. Requires a browser with **:before** CSS pseudo class support. This is useful for a full screen carousel.
 
+
+####Note on using a function for configure_load
+you can specify a function for configure_load and inside that function call the internal configure function or even configure the elements manually :
+
+```javascript
+    var film_roll = new FilmRoll({
+        configure_load: function(){
+            // <---pre-configure operations
+            this.configureLoad(); // this refer to film_roll object
+            // <---post-configure operations
+        },
+        container: '#container_id',
+      });
+```
+notice your function will be invoked immediately ,sometimes it's useful to use a setTimeout inside of your function :
+```javascript
+    var film_roll = new FilmRoll({
+        configure_load: function(){
+        	// <---pre-configure operations
+        	setTimeout((function (_this) {
+                        return function () {
+                            return _this.configureLoad();
+                        };
+                    })(this), 1000);
+                    
+        },
+        container: '#container_id',
+      });
+```
+
 ##Examples
 
 ### View the Project Page
