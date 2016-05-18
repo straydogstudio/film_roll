@@ -11,7 +11,7 @@
 
 ##UPDATE
 
-* The minified version of this script may throw errors. I have not been able to isolate this. If this happens to you, please use the non-minified script. If you have time, reproduce it with a jsbin or jsfiddle and open an issue. Thanks!
+* The minified version of this script may throw errors. I have not been able to isolate this. If this happens to you, please use the non-minified script. If you have time, reproduce it with a jsbin or jsfiddle and open an issue. Thanks! (5/2016)
 
 ##Features
 
