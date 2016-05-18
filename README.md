@@ -1,7 +1,6 @@
 #FilmRoll
 **A lightweight jQuery carousel**
 
-
 ##Description
 
 **FilmRoll** is a lightweight jQuery carousel (12 kb minified) that focuses on one item at a time, centering it in the view, regardless of the relative sizes of the carousel items.
@@ -12,11 +11,7 @@
 
 ##UPDATE
 
-* Two new features have been added:
-  - FilmRoll now supports positioning. You can specify a position of 'left', 'right', or 'center' (the default.) The active child element will be moved to the left, right, or center of the visible window. There is also an offset option which will bump the position left (negative) or right (positive) by the specified number of pixels if you need it. (4/13/2015)
-  - If the child elements are smaller than the visible window, they are now shuttled back and forth, but they are _NOT ROTATED_ unless the force_rotate option is specified (see the third carousel on the [demo page](http://straydogstudio.github.io/film_roll).) In addition, the previous / next buttons are hidden, unless the force_buttons option is specified. (4/13/2015)
-  - Thanks to [prashantsani](https://github.com/prashantsani) for asking for, clarifying, and testing these features.
-* The recent TouchSwipe support disabled all links inside the carousel. This has now been fixed in [0.1.17](https://github.com/straydogstudio/film_roll/releases). Thanks to [EmrahAkdeniz](https://github.com/EmrahAkdeniz) for reporting it. (3/15/2015)
+* The minified version of this script may throw errors. I have not been able to isolate this. If this happens to you, please use the non-minified script. If you have time, reproduce it with a jsbin or jsfiddle and open an issue. Thanks!
 
 ##Features
 
