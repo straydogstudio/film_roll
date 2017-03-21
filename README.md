@@ -1,7 +1,7 @@
-#FilmRoll
+# FilmRoll
 **A lightweight jQuery carousel**
 
-##Description
+## Description
 
 **FilmRoll** is a lightweight jQuery carousel (12 kb minified) that focuses on one item at a time, centering it in the view, regardless of the relative sizes of the carousel items.
 
@@ -9,11 +9,11 @@
 
 ---
 
-##UPDATE
+## UPDATE
 
 * The minified version of this script may throw errors. I have not been able to isolate this. If this happens to you, please use the non-minified script. If you have time, reproduce it with a jsbin or jsfiddle and open an issue. Thanks! (5/2016)
 
-##Features
+## Features
 
 - Centers one item at a time in the view
 - Uses css classes for easy styling / transitions
@@ -24,7 +24,7 @@
 - Yet to be implemented:
     - Simple external link using classes/ids (For now [see Javascript below](#using-javascript))
 
-##A Note on Performance and [GSAP](http://www.greensock.com/gsap-js/)
+## A Note on Performance and [GSAP](http://www.greensock.com/gsap-js/)
 
 jQuery's animation tends to cause high cpu load. The best solution for this is to use [GreenSock](http://www.greensock.com/gsap-js/) to replace the jQuery animate function. 
 
@@ -37,7 +37,7 @@ To do so, include the following minimal markup, unless you are using the complet
 <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/jquery.gsap.min.js"></script>
 ```
 
-##Usage
+## Usage
 
 ###Installation
 
@@ -65,7 +65,7 @@ bower install FilmRoll
 <script src="/bower_components/jquery-touchswipe/jquery.touchSwipe.min.js"></script>
 ```
 
-###Markup
+### Markup
 
 FilmRoll expects a parent div with children div elements, though it should work with most any child element:
 
@@ -82,7 +82,7 @@ FilmRoll expects a parent div with children div elements, though it should work 
 
 Using non `<div>` tags as children works fine. The tag used may require (significant) styling to get it to work like a div.
 
-###Create
+### Create
 
 Create the FilmRoll instance on dom:ready:
 
@@ -105,7 +105,7 @@ If you need to create FilmRoll on page load, use the `configure_load` option:
   });
 ```
 
-###Configuration
+### Configuration
 **var film_roll = new FilmRoll({container: '#container_id', OPTIONS})**
 
 Params:
@@ -146,7 +146,7 @@ Other Options:
 - **:vertical_center**: Center children vertically in the container. Requires a browser with **:before** CSS pseudo class support. This is useful for a full screen carousel.
 
 
-####Note on using a function for configure_load
+#### Note on using a function for configure_load
 you can specify a function for configure_load and inside that function call the internal configure function or even configure the elements manually :
 
 ```javascript
@@ -175,13 +175,13 @@ notice your function will be invoked immediately ,sometimes it's useful to use a
       });
 ```
 
-##Examples
+## Examples
 
 ### View the Project Page
 
 View the [project page for working examples](http://straydogstudio.github.io/film_roll).
 
-###Click to Center
+### Click to Center
 
 If you want to center an item when someone clicks on it, try this:
 
@@ -240,7 +240,7 @@ var film_roll = new FilmRoll({
 
 See an [example here](http://straydogstudio.github.io/film_roll/fullscreen.html).
 
-###Styling
+### Styling
 
 FilmRoll takes the following markup:
 
@@ -266,9 +266,9 @@ and wraps all children with two divs, adds the class `film_roll_child` and a sty
 
 Use these classes to apply styling and effects. See the [example page](http://straydogstudio.github.io/film_roll).
 
-##Theory
+## Theory
 
-###On load vs. dom:loaded
+### On load vs. dom:loaded
 
 FilmRoll is written to be called on dom:ready. It inserts all markup before display and configures itself to resize itself once the content is loaded (after the window.load event) because **it must have content to center an item on the page**.
 
@@ -453,9 +453,9 @@ Unless you specify no_css, FilmRoll adds the following css to the page header:
 
 Add it to your own css and disable with `no_css: true` when calling FilmRoll to improve performance.
 
-##Troubleshooting
+## Troubleshooting
 
-###Loading Failure (e.g. on iOS 8)
+### Loading Failure (e.g. on iOS 8)
 
 FilmRoll needs to measure the size of all elements to function. As a result, it is not completely configured until page load. If any other script fails or times out it could cause FilmRoll to fail. iOS 8 in particular is brittle in this regard. (In one instance Vimeo failed to load and caused FilmRoll to fail.) Use developer tools to watch your resources loading. Look for any failures. 
 
@@ -470,11 +470,11 @@ var film_roll = new FilmRoll({
 
 This will call `film_roll.configureLoad()` 50 milliseconds after the film roll is instantiated. _This may or may not mean the assets are ready!_
 
-###Large images or slow loading pages
+### Large images or slow loading pages
 
 If you have a heavy set of images, the gallery can look empty while it loads. You can either style the child element to have an appropriate background (e.g. a gradient) while it is waiting, or you can use javascript to load high res pics later. E.g. populate your gallery with placeholder images and use [jQuery Lazyload](https://github.com/tuupola/jquery_lazyload) to load the images after the page loads. 
 
-###Items aren't centering
+### Items aren't centering
 
 If items aren't centering correctly, it is probably because you don't have child div's in side the parent div. For instance, calling FilmRoll on an unordered list has mixed results. Usually the centering will not work. You'll have to strip all normal css styling to get it to work. It will probably be easier to convert it to div > div format. 
 
@@ -482,21 +482,21 @@ If you do have divs inside a parent div, try temporarily giving a border to the 
 
 If you think you have found a bug, report an issue. 
 
-###Images disappear at the front or back
+### Images disappear at the front or back
 
 FilmRoll is really designed for content wider than the container. When you get to the end of a list of children, it rotates content ahead of time so there are no blank spaces during the subsequent animation. If your list is just wider than your container, or if your children are very wide compared to the width of the whole, you may see children disappear from one side before they appear on the other. This is expected behavior.
 
 Eventually I will have a fix for this. In the meantime, repeat the children to fill out the list. It will still look like the smaller list rotating, and you will not have 'disappearances.'
 
-###Double rows on start (shuttle width)
+### Double rows on start (shuttle width)
 
 FilmRoll sets the shuttle (the the div that holds all elements and slides back and forth) to 10000 pixels wide until the page loads. When the page loads, the content is used to determine the appropriate width. If 10000 pixels is not enough for the content you will get two rows of children during page load. Try setting `shuttle_width` to a higher value. 
 
-###Box shadow is cut off
+### Box shadow is cut off
 
 jQuery does not measure the box shadow when it measures the height of child elements. If you want FilmRoll to adjust the height dynamically but also make the box shadow visible, set the FilmRoll height with a "+height" string. The integer should be the same as your box shadow height. So if your box shadow is `10px`, use `height: "+10"`. FilmRoll will add 10 pixels to the minimum height of the wrapper.
 
-##Changelog
+## Changelog
 
 - **0.1.17:** (1/13/16) move_on_start option, recompile for issues
 - **0.1.16:** (4/13/15) Position/offset, slide but no rotate for less than visible width, handle duplicate instances, force_buttons & force_rotate options
@@ -517,7 +517,7 @@ jQuery does not measure the box shadow when it measures the height of child elem
 - **0.1.1:** (8/26/13) Fixes for load/reload mouse issues. Child margins.
 - **0.1.0:** (8/21/13) Initial release
 
-##Development
+## Development
 
 Fork the project on [github](https://github.com/straydogstudio/film_roll 'straydogstudio / FilmRoll on Github'), edit away, and pull.
 
@@ -527,6 +527,6 @@ FilmRoll is written in [CoffeeScript](http://coffeescript.org). To automatically
 coffee -wc -o js/ coffee/*.coffee
 ```
 
-##Authors, License and Stuff
+## Authors, License and Stuff
 
 Code by [Noel Peden](http://straydogstudio.com) and released under [MIT license](http://www.opensource.org/licenses/mit-license.php).
