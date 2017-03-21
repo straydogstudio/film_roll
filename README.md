@@ -39,7 +39,7 @@ To do so, include the following minimal markup, unless you are using the complet
 
 ## Usage
 
-###Installation
+### Installation
 
 Download [jquery.film_roll.min.js](https://github.com/straydogstudio/film_roll/releases) and place it in your scripts directory.
 
